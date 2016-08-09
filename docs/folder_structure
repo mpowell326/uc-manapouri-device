@@ -1,0 +1,9 @@
+# Suggested folder structure to follow:
+
+bin: The output executables go here, both for the app and for any tests and spikes.
+config: General settings/setup files go here.
+doc: Any notes, like my assembly notes and configuration files, are here.
+lib: Any libs that get compiled by the project, third party or any needed in development.
+src_main: The application source files for the beaglebone black.
+src_power: The application source files for the arduino nano power management.
+test: ???
