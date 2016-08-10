@@ -12,7 +12,7 @@ all: $(TARGET)
 	@echo Program has been compiled
 
 $(TARGET): $(OBJECTS)
-	$(CC) $^ -o lib/wiringBone/BUILD/wiringBone.so $(CFLAGS) $(INC) -o $(TARGET) 
+	$(CC) $^ $(CFLAGS) $(INC) -o $(TARGET) lib/wiringBone/BUILD/wiringBone.so -lpthread
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(BUILDDIR)

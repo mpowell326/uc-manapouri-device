@@ -99,3 +99,6 @@ pru: PRU0.p PRU1.p
 	@echo Compiling PRU Assembly
 	@pasm -V3 -c -CPRU0code PRU0.p
 	@pasm -V3 -c -CPRU1code PRU1.p
+clean:
+	@echo Making Clean
+	rm $(OBJ_DIR)*.o $(OBJ_DIR)*.so
