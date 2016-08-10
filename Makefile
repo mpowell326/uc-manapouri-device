@@ -1,4 +1,4 @@
-CC = gcc # This is the main compiler (use g++ for C++)
+CC = g++ # This is the main compiler (use g++ for C++)
 SRCDIR = src_main
 BUILDDIR = bin
 TARGET = $(BUILDDIR)/nemo
@@ -6,13 +6,13 @@ TARGET = $(BUILDDIR)/nemo
 SOURCES = $(shell find $(SRCDIR) -type f -name *.c)
 OBJECTS = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.c=.o))
 CFLAGS = -g -Wall
-INC = -I include
+INC = -I ./ -I lib/wiringBone/library/ -I lib/wiringBone/
 
 all: $(TARGET)
 	@echo Program has been compiled
 
 $(TARGET): $(OBJECTS)
-	$(CC) $^ $(CFLAGS) $(INC) -o $(TARGET)
+	$(CC) $^ -o lib/wiringBone/BUILD/wiringBone.so $(CFLAGS) $(INC) -o $(TARGET) 
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(BUILDDIR)

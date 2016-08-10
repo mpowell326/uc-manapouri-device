@@ -24,7 +24,7 @@ SRC_SEARCH_DIR = ../
 
 INCLUDE_DIR = .
 
-CPPFLAGS = -Wall
+CPPFLAGS = -Wall -fPIC
 
 CPPFLAGS += -lpthread
 
@@ -69,6 +69,10 @@ main: $(LIB_OBJ) $(C_OBJ) $(CPP_OBJ) $(INO_OBJ) $(PDE_OBJ)
 start: pru
 	@mkdir -p $(OBJ_DIR)
 
+wiringBone: $(LIB_OBJ)
+	@echo Linking wiringBone library
+	@echo $(addprefix $(OBJ_DIR), $(LIB_OBJ))
+	g++ -shared -o $(OBJ_DIR)wiringBone.so $(addprefix $(OBJ_DIR), $(LIB_OBJ)) -lm
 
 $(LIB_OBJ): %.o : %.cpp
 	@echo Compiling $<

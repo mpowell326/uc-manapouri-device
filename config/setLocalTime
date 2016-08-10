@@ -1,0 +1,10 @@
+#!/bin/sh
+
+#Install ntp package for updating time
+sudo apt-get install ntp
+
+# Set local timezone
+cd /etc
+rm -f localtime
+ln -s ../usr/share/zoneinfo/NZ localtime
+
