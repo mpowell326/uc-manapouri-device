@@ -7,7 +7,7 @@
 main(void)
 {
     pinMode(P8_10, OUTPUT);
-    printf("Hello World\n");
+    printf("Hello World !!\n");
 
     return 0;
 }
