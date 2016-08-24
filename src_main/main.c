@@ -12,11 +12,13 @@ void setup()
 
 
 
-main(void)
+void main(void)
 {
-    pinMode(P8_10, OUTPUT);
+    int i=0;
     printf("Hello World !!\n");
-
-     digitalWrite(8_10, HIGH);
-    return 0;
+    while(1)
+    {
+        printf("%d",i++);
+        digitalWrite(8_10, HIGH);
+    }
 }
