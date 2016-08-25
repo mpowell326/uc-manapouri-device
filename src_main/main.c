@@ -11,7 +11,7 @@ void setup()
     pinMode(P8_10, OUTPUT);
 
     // PWM
-    pinMode(P8_13,OUTPUT);
+    //pinMode(P8_13,OUTPUT);
 }
 
 
@@ -25,8 +25,8 @@ int main(void)
     printf("Hello\n");
     
     //  start PWM
-    analogWrite(P8_13,10);
-
+    analogWrite(P8_13,210);
+    //setDutyPercentage (P8_13,60);
     while(1)
     {
         delay(500);
