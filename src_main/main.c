@@ -24,8 +24,8 @@ int main(void)
     printf("Hello\n");
     
     /* start PWM */
-    analogWrite(P9_16, 0);
-    // setDutyPercentage (P8_13,60);
+    // analogWrite(P9_16, 0);
+    setDutyPercentage (P9_16,60);
     while(1)
     {
         // adc_value = analogRead(AIN0);
