@@ -26,7 +26,7 @@ int main(void)
     
     //  start PWM
     analogWrite(P8_13,50);
-    //setDutyPercentage (P8_13,60);
+    setDutyPercentage (P8_13,60);
     while(1)
     {
         delay(500);
