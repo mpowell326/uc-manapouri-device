@@ -25,7 +25,7 @@ int main(void)
     printf("Hello\n");
     
     //  start PWM
-    analogWrite(P8_13,50);
+    analogWrite(P8_20,50);
     setDutyPercentage (P8_13,60);
     while(1)
     {
