@@ -74,7 +74,7 @@
 #define P9_13_MODE disabled		// gpio, uart
 #define P9_14_MODE disabled		// gpio, pwm
 #define P9_15_MODE disabled		// gpio
-#define P9_16_MODE disabled		// gpio, pwm
+#define P9_16_MODE pwm  		// gpio, pwm
 #define P9_17_MODE disabled		// gpio, spi, i2c
 #define P9_18_MODE disabled		// gpio, spi, i2c
 #define P9_21_MODE disabled		// gpio, pwm, uart, spi, i2c
