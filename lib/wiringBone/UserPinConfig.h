@@ -41,14 +41,14 @@
 #define P8_17_MODE disabled		// gpio
 #define P8_18_MODE disabled		// gpio
 #define P8_19_MODE disabled		// gpio, pwm
-#define P8_20_MODE pruout		// gpio, pruout, pruin
+#define P8_20_MODE disabled		// gpio, pruout, pruin
 #define P8_21_MODE disabled		// gpio, pruout, pruin
 #define P8_22_MODE disabled		// gpio
 #define P8_23_MODE disabled		// gpio
 #define P8_24_MODE disabled		// gpio
 #define P8_25_MODE disabled		// gpio
 #define P8_26_MODE disabled		// gpio
-#define P8_27_MODE disabled		// gpio, pruout, pruin
+#define P8_27_MODE pruout		// gpio, pruout, pruin
 #define P8_28_MODE disabled		// gpio, pruout, pruin
 #define P8_29_MODE disabled		// gpio, pruout, pruin
 #define P8_30_MODE disabled		// gpio, pruout, pruin
