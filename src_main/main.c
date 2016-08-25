@@ -8,9 +8,9 @@
 void setup()
 {
     // GPIO: LED Pin
-    pinMode(P8_10, OUTPUT);
+    // pinMode(P8_10, OUTPUT);
 
-    pinMode(P9_16, OUTPUT);
+    // pinMode(P9_16, OUTPUT);
 }
 
 
@@ -28,11 +28,11 @@ int main(void)
     // setDutyPercentage (P8_13,60);
     while(1)
     {
-        adc_value = analogRead(AIN0);
-        volt = 1000*adc_value/608;
-        printf("ADC0: %d | ", adc_value);
-        printf("mVolts: %d\n", volt);
-        delay(500);
+        // adc_value = analogRead(AIN0);
+        // volt = 1000*adc_value/608;
+        // printf("ADC0: %d | ", adc_value);
+        // printf("mVolts: %d\n", volt);
+        // delay(500);
         // printf("%d",i++);
         // digitalWrite(P8_10, LOW);
         // delay(500);
