@@ -11,7 +11,7 @@ void setup()
     pinMode(P8_10, OUTPUT);
 
     // PWM
-    pinMode(P8_13);
+    pinMode(P8_13,OUTPUT);
 }
 
 
