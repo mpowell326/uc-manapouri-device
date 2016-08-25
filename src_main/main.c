@@ -7,18 +7,34 @@
 
 void setup()
 {
-    pinMode(8_10, OUTPUT);
+    // GPIO: LED Pin
+    pinMode(P8_10, OUTPUT);
+
+    // PWM
+    pinMode(P8_13);
 }
 
 
 
-void main(void)
+int main(void)
 {
     int i=0;
-    printf("Hello World !!\n");
+
+    setup();
+
+    printf("Hello\n");
+    
+    //  start PWM
+    analogWrite(P8_13,230);
+
     while(1)
     {
+        delay(500);
         printf("%d",i++);
-        digitalWrite(8_10, HIGH);
+        digitalWrite(P8_10, LOW);
+        delay(500);
+        printf("%d",i++);
+        digitalWrite(P8_10, HIGH);
     }
+    return 0;
 }
