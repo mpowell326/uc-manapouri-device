@@ -25,7 +25,7 @@ int main(void)
     printf("Hello\n");
     
     //  start PWM
-    analogWrite(P8_13,230);
+    analogWrite(P8_13,10);
 
     while(1)
     {
