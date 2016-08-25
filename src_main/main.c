@@ -9,6 +9,8 @@ void setup()
 {
     // GPIO: LED Pin
     pinMode(P8_10, OUTPUT);
+
+    pinMode(P9_16, OUTPUT);
 }
 
 
@@ -22,7 +24,7 @@ int main(void)
     printf("Hello\n");
     
     /* start PWM */
-    analogWrite(P9_16,0);
+    analogWrite(P9_16,100);
     // setDutyPercentage (P8_13,60);
     while(1)
     {
