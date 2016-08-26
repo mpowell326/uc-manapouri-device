@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "Setting the time using the New Zealand ntp pool"
+#/usr/bin/ntpdate -b -s -u nz.pool.ntp.org
+ntpdate -b -s -u nz.pool.ntp.org
