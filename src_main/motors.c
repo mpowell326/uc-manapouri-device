@@ -2,22 +2,23 @@
 
 #define freq_hz 50;
 
-void Motormove (int motorpin, int PWMpercentage, int time){
+void Motormove (int motorpin1, int motorpin2, int PWMpercentage, int time){
 
 
+    //motor one
+    setTimePeriod (motorpin, uint32_t period_us);
+    setFrequency (motorpin, freq_hz);
+    setPulseWidth (motorpin, uint32_t period_us);
+    setDutyPercentage (motorpin, uint32_t percentage);
 
+    //motor two
     setTimePeriod (motorpin, uint32_t period_us);
     setFrequency (motorpin, freq_hz);
     setPulseWidth (motorpin, uint32_t period_us);
     setDutyPercentage (motorpin, uint32_t percentage);
 
 
-
-    // length of time the motor is running for
-    delay(time)
-
     // returning the motor to 1500hz
-    analogWrite(motorpin, uint8_t value)
 
 
 }
