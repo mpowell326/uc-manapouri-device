@@ -1,5 +1,5 @@
 #include "motors.h"
-
+#include "wiring.h"
 #define freq_hz 50;
 
 void Motormove (int motorpin1, int motorpin2, int PWMpercentage, int time){

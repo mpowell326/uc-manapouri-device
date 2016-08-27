@@ -1,6 +1,7 @@
+#include "wiring.h"
 
 
 void readsensors(sensorpin){
-    int analogRead(sensorpin)
-    analogRead = analogRead*4.9 // voltage divider values to give actual value
+    int sensorvalue  = analogRead(sensorpin)
+    sensorvalue = sensorvalue*4.9 // voltage divider values to give actual value
 }
