@@ -4,9 +4,9 @@
 #include "Wiring.h"
 #include "UserPinConfig.h"
 #include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BNO055.h>
-#include <utility/imumaths.h>
+// #include <Adafruit_Sensor.h>
+// #include <Adafruit_BNO055.h>
+// #include <utility/imumaths.h>
 
 
 #define VOLT_DIV 5
