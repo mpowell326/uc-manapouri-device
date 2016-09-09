@@ -10,7 +10,7 @@
 
 
 #define VOLT_DIV 5
-
+#define MOTOR1_PIN P9_16
 /* Set the delay between fresh samples */
 // #define BNO055_SAMPLERATE_DELAY_MS (100)
 
@@ -25,7 +25,9 @@ void setup(void)
 {
     // GPIO: LED Pin
     pinMode(P8_10, OUTPUT);
-
+    setTimePeriod (MOTOR1_PIN, 20000);
+    setPulseWidth (MOTOR1_PIN, 1500);
+    delay(3000);
 
     // printf("Orientation Sensor Raw Data Test");
 
@@ -125,19 +127,22 @@ int main(void)
     printf("Hello\n");
     
     /* start PWM */
-    analogWrite(P9_16, 60);
+    // analogWrite(P9_16, 60);
     // setDutyPercentage (P9_16,60);
     while(1)
     {
         adc_value = analogRead(AIN0);
-        volt = 1000*adc_value*VOLT_DIV/608;
+        volt = 1000*adc_value/608;
+
+        motor_signal = map(adc_value, 0, 1023, 1100,1900); // Set signal value, which should be between 1100 and 1900
+        setPulseWidth (MOTOR1_PIN, motor_signal);
         printf("ADC0: %d | ", adc_value);
         printf("mVolts: %f\n", volt);
         // imu_print();
 
 
 
-        delay(500);
+        delay(100);
         // printf("%d",i++);
         // digitalWrite(P8_10, LOW);
         // delay(500);
