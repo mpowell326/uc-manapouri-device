@@ -9,7 +9,7 @@
 #include <utility/imumaths.h>
 
 
-
+#define VOLT_DIV 5
 
 /* Set the delay between fresh samples */
 #define BNO055_SAMPLERATE_DELAY_MS (100)
@@ -27,28 +27,28 @@ void setup(void)
     pinMode(P8_10, OUTPUT);
 
 
-    printf("Orientation Sensor Raw Data Test");
+    // printf("Orientation Sensor Raw Data Test");
 
-    /* Initialise the sensor */
-    if(!bno.begin())
-    {
-    /* There was a problem detecting the BNO055 ... check your connections */
-    printf("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
-    while(1);
-    }
+    // /* Initialise the sensor */
+    // if(!bno.begin())
+    // {
+    // /* There was a problem detecting the BNO055 ... check your connections */
+    // printf("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
+    // while(1);
+    // }
 
-    delay(1000);
+    // delay(1000);
 
-    /* Display the current temperature */
-    int8_t temp = bno.getTemp();
-    printf("Current Temperature: ");
-    printf(temp);
-    printf(" C");
-    printf("");
+    // /* Display the current temperature */
+    // int8_t temp = bno.getTemp();
+    // printf("Current Temperature: ");
+    // printf(temp);
+    // printf(" C");
+    // printf("");
 
-    bno.setExtCrystalUse(true);
+    // bno.setExtCrystalUse(true);
 
-    printf("Calibration status values: 0=uncalibrated, 3=fully calibrated");
+    // printf("Calibration status values: 0=uncalibrated, 3=fully calibrated");
 }
 
 /**************************************************************************/
@@ -129,11 +129,11 @@ int main(void)
     // setDutyPercentage (P9_16,60);
     while(1)
     {
-        // adc_value = analogRead(AIN0);
-        // volt = 1000*adc_value/608;
-        // printf("ADC0: %d | ", adc_value);
-        // printf("mVolts: %d\n", volt);
-        imu_print();
+        adc_value = analogRead(AIN0);
+        volt = 1000*adc_value/(VOLT_DIV*608);
+        printf("ADC0: %d | ", adc_value);
+        printf("mVolts: %d\n", volt);
+        // imu_print();
 
 
         delay(500);
