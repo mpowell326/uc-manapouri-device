@@ -1,5 +1,4 @@
-#include "wiring.h"
-
+#include <Wire.h>
 
 void readsensors(sensorpin){
     int sensorvalue  = analogRead(sensorpin)
