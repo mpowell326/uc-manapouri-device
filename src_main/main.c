@@ -130,9 +130,9 @@ int main(void)
     while(1)
     {
         adc_value = analogRead(AIN0);
-        volt = 1000*adc_value/(VOLT_DIV*608);
+        volt = 1000*adc_value*VOLT_DIV/608;
         printf("ADC0: %d | ", adc_value);
-        printf("mVolts: %d\n", volt);
+        printf("mVolts: %f\n", volt);
         // imu_print();
 
 
