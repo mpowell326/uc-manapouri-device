@@ -140,8 +140,8 @@ int main(void)
 
         motor_signal = map(adc_value, 0, 1023, 1100,1900); // Set signal value, which should be between 1100 and 1900
         setPulseWidth (MOTOR1_PIN, motor_signal);
-        printf("ADC0: %d | ", adc_value);
-        printf("mVolts: %f\n", volt);
+        // printf("ADC0: %d | ", adc_value);
+        // printf("mVolts: %f\n", volt);
         imu_print();
 
 
