@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "Wiring.h"
 #include "UserPinConfig.h"
-#include <Wire.h>
+// #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
@@ -33,7 +33,7 @@ void setup(void)
     printf("    3 \n");
     delay(3000);
 
-    printf("Orientation Sensor Raw Data Test");
+    printf("Orientation Sensor Raw Data Test \n");
 
     /* Initialise the sensor */
     if(!bno.begin())
