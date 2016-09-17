@@ -14,7 +14,10 @@ all: $(TARGET)
 $(TARGET): $(OBJECTS)
 	$(CC) $^ $(CFLAGS) $(INC) -o $(TARGET) lib/wiringBone/BUILD/wiringBone.so -lpthread
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp lib/Adafruit_BNO055-master/Adafruit_BNO055.cpp
+$(BUILDDIR)/BNO055.o: lib/Adafruit_BNO055-master/Adafruit_BNO055.cpp
+	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
+
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(BUILDDIR)
 	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
