@@ -97,13 +97,13 @@ void imu_print(void)
     uint8_t system, gyro, accel, mag = 0;
     bno.getCalibration(&system, &gyro, &accel, &mag);
     printf("CALIBRATION: Sys=");
-    printf(system, DEC);
+    printf("%d",system);
     printf(" Gyro=");
-    printf(gyro, DEC);
+    printf("%d",gyro);
     printf(" Accel=");
-    printf(accel, DEC);
+    printf("%d",accel);
     printf(" Mag=");
-    printlnf(mag, DEC);
+    printf("%d \n",mag);
 
     delay(BNO055_SAMPLERATE_DELAY_MS);
 }
