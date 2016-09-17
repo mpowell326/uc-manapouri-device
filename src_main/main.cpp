@@ -23,7 +23,7 @@ Adafruit_BNO055 bno = Adafruit_BNO055();
 /**************************************************************************/
 void setup(void)
 {
-    printf("%d \n", Adafruit_BNO055->sensorID);
+    printf("%d \n", bno.sensorID);
     // GPIO: LED Pin
     printf("Setup started.... \n");
     pinMode(P8_10, OUTPUT);
