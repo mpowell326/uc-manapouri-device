@@ -24,6 +24,7 @@ Adafruit_BNO055 bno = Adafruit_BNO055();
 void setup(void)
 {
     // GPIO: LED Pin
+    printf("Setup started.... \n")
     pinMode(P8_10, OUTPUT);
     setTimePeriod (MOTOR1_PIN, 20000);
     setPulseWidth (MOTOR1_PIN, 1500);
