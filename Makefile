@@ -6,7 +6,7 @@ TARGET = $(BUILDDIR)/nemo
 SOURCES = $(shell find $(SRCDIR) -type f -name *.cpp)
 OBJECTS = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.cpp=.o))
 CFLAGS = -g -Wall
-INC = -I ./ -I lib/wiringBone/library/ -I lib/wiringBone/
+INC = -I ./ -I lib/wiringBone/library/ -I lib/wiringBone/ -I lib/Adafruit_Sensor2/
 
 all: $(TARGET)
 	@echo Program has been compiled
