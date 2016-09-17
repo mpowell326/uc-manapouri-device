@@ -72,11 +72,11 @@ void imu_print(void)
 
     /* Display the floating point data */
     printf("X: ");
-    printf(euler.x());
+    printf("%d",euler.x());
     printf(" Y: ");
-    printf(euler.y());
+    printf("%d",euler.y());
     printf(" Z: ");
-    printf(euler.z());
+    printf("%d",euler.z());
     printf("\t\t");
 
     
