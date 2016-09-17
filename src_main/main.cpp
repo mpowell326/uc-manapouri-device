@@ -26,8 +26,11 @@ void setup(void)
     // GPIO: LED Pin
     printf("Setup started.... \n");
     pinMode(P8_10, OUTPUT);
+    printf("    1 \n");
     setTimePeriod (MOTOR1_PIN, 20000);
+    printf("    2 \n");
     setPulseWidth (MOTOR1_PIN, 1500);
+    printf("    3 \n");
     delay(3000);
 
     printf("Orientation Sensor Raw Data Test");
