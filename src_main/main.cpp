@@ -42,9 +42,9 @@ void setup(void)
     delay(1000);
 
     /* Display the current temperature */
-    int temp = bno.getTemp();
+    int8_t temp = bno.getTemp();
     printf("Current Temperature: ");
-    printf(temp);
+    printf("%d",temp);
     printf(" C");
     printf("");
 
