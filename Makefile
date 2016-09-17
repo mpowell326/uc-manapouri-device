@@ -11,7 +11,7 @@ INC = -I ./ -I lib/wiringBone/library/ -I lib/wiringBone/ -I lib/Adafruit_Sensor
 all: $(TARGET)
 	@echo Program has been compiled
 
-$(TARGET): $(OBJECTS) BNO055
+$(TARGET): $(OBJECTS) BNO055.o
 	$(CC) $^ $(CFLAGS) $(INC) -o $(TARGET) $(BUILDDIR)/BNO055.o lib/wiringBone/BUILD/wiringBone.so -lpthread
 
 BNO055: lib/Adafruit_BNO055-master/Adafruit_BNO055.cpp
