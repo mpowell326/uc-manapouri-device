@@ -20,11 +20,13 @@
 #ifndef __ADAFRUIT_BNO055_H__
 #define __ADAFRUIT_BNO055_H__
 
+/*
 #if (ARDUINO >= 100)
  #include "Arduino.h"
 #else
  #include "WProgram.h"
 #endif
+*/
 
 #ifdef __AVR_ATtiny85__
  #include <TinyWireM.h>
