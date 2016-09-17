@@ -23,7 +23,7 @@
 //  #include "WProgram.h"
 // #endif
 
-#inlude "Wiring.h"
+#include "Wiring.h"
 #include "Wire.h"
 #include <math.h>
 #include <limits.h>
