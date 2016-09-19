@@ -39,8 +39,8 @@ void setup(void)
     if(!bno.begin())
     {
     /* There was a problem detecting the BNO055 ... check your connections */
-    printf("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
-    while(1);
+        printf("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
+        while(1);
     }
 
     delay(1000);
