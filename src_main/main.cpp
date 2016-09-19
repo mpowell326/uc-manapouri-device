@@ -68,21 +68,15 @@ void imu_print(void)
     imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
 
     /* Display the floating point data */
-    printf("X: ");
-    printf("%d",euler.x());
-    printf(" Y: ");
-    printf("%d",euler.y());
-    printf(" Z: ");
-    printf("%d",euler.z());
-    printf("\t\t");
+    printf("X: %f, Y: %f, Z: %f \n", euler.x(),euler.y(), euler.z());
 
-    
+
     // Quaternion data
     imu::Quaternion quat = bno.getQuat();
-    Serial.print("qW: %d ", quat.w(), 4);
-    Serial.print("qX: %d ", quat.x(), 4);
-    Serial.print("qY: %d ", quat.y(), 4);
-    Serial.print("qZ: %d \n", quat.z(), 4);
+    Serial.print("qW: %d ", quat.w());
+    Serial.print("qX: %d ", quat.x());
+    Serial.print("qY: %d ", quat.y());
+    Serial.print("qZ: %d \n", quat.z());
 
     /* Display calibration status for each sensor. */
     uint8_t system, gyro, accel, mag = 0;
