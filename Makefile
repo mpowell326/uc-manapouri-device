@@ -3,8 +3,8 @@ SRCDIR = src_main
 BUILDDIR = bin
 TARGET = $(BUILDDIR)/nemo
  
-SOURCES = $(shell find $(SRCDIR) -type f -name *.c)
-OBJECTS = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.c=.o))
+SOURCES = $(shell find $(SRCDIR) -type f -name *.cpp)
+OBJECTS = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.cpp=.o))
 CFLAGS = -g -Wall
 INC = -I ./ -I lib/wiringBone/library/ -I lib/wiringBone/
 
@@ -14,7 +14,7 @@ all: $(TARGET)
 $(TARGET): $(OBJECTS)
 	$(CC) $^ $(CFLAGS) $(INC) -o $(TARGET) lib/wiringBone/BUILD/wiringBone.so -lpthread
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.c
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(BUILDDIR)
 	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
@@ -23,3 +23,4 @@ clean:
 	@echo " $(RM) -r $(BUILDDIR)/*.o $(TARGET)"; $(RM) -r $(BUILDDIR)/*.o $(TARGET)
 
 .PHONY: clean
+

@@ -16,8 +16,6 @@
 
 Adafruit_BNO055 bno = Adafruit_BNO055();
 
-
-
 /**************************************************************************/
 /*
     Arduino setup function (automatically called at startup)
