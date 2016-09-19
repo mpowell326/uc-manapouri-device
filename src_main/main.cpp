@@ -73,10 +73,10 @@ void imu_print(void)
 
     // Quaternion data
     imu::Quaternion quat = bno.getQuat();
-    Serial.print("qW: %f ", quat.w());
-    Serial.print("qX: %f ", quat.x());
-    Serial.print("qY: %f ", quat.y());
-    Serial.print("qZ: %f \n", quat.z());
+    Serial.print("qW: %f ", (float)uat.w());
+    Serial.print("qX: %f ", (float)quat.x());
+    Serial.print("qY: %f ", (float)quat.y());
+    Serial.print("qZ: %f \n", (float)quat.z());
 
     /* Display calibration status for each sensor. */
     uint8_t system, gyro, accel, mag = 0;
