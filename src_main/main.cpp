@@ -73,10 +73,10 @@ void imu_print(void)
 
     // Quaternion data
     imu::Quaternion quat = bno.getQuat();
-    Serial.print("qW: %f ", (float)uat.w());
-    Serial.print("qX: %f ", (float)quat.x());
-    Serial.print("qY: %f ", (float)quat.y());
-    Serial.print("qZ: %f \n", (float)quat.z());
+    printf("qW: %f ", (float)quat.w());
+    printf("qX: %f ", (float)quat.x());
+    printf("qY: %f ", (float)quat.y());
+    printf("qZ: %f \n", (float)quat.z());
 
     /* Display calibration status for each sensor. */
     uint8_t system, gyro, accel, mag = 0;
@@ -100,8 +100,8 @@ void imu_print(void)
 
 int main(void)
 {
-    int i=0, adc_value, motor_signal;
-    float volt=0;
+    int adc_value, motor_signal;
+    // float volt;
     setup();
 
     printf("Hello\n");
@@ -112,7 +112,7 @@ int main(void)
     while(1)
     {
         adc_value = analogRead(AIN0);
-        volt = 1000*adc_value/608;
+        // volt = 1000*adc_value/608;
 
         motor_signal = map(adc_value, 0, 1023, 1100,1900); // Set signal value, which should be between 1100 and 1900
         setPulseWidth (MOTOR1_PIN, motor_signal);
