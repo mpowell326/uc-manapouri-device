@@ -26,20 +26,16 @@ void setup(void)
     // GPIO: LED Pin
     printf("Setup started.... \n");
     pinMode(P8_10, OUTPUT);
-    printf("    1 \n");
     setTimePeriod (MOTOR1_PIN, 20000);
-    printf("    2 \n");
     setPulseWidth (MOTOR1_PIN, 1500);
-    printf("    3 \n");
     delay(3000);
 
     printf("Orientation Sensor Raw Data Test \n");
-
     /* Initialise the sensor */
     if(!bno.begin())
     {
     /* There was a problem detecting the BNO055 ... check your connections */
-        printf("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
+        printf("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!\n");
         while(1);
     }
 
@@ -47,14 +43,11 @@ void setup(void)
 
     /* Display the current temperature */
     int8_t temp = bno.getTemp();
-    printf("Current Temperature: ");
-    printf("%d",temp);
-    printf(" C");
-    printf("");
+    printf("Current Temperature: %d C\n",temp);
 
     bno.setExtCrystalUse(true);
 
-    printf("Calibration status values: 0=uncalibrated, 3=fully calibrated");
+    printf("Calibration status values: 0=uncalibrated, 3=fully calibrated\n");
 }
 
 /**************************************************************************/
@@ -86,28 +79,15 @@ void imu_print(void)
     
     // Quaternion data
     imu::Quaternion quat = bno.getQuat();
-    Serial.print("qW: ");
-    Serial.print(quat.w(), 4);
-    Serial.print(" qX: ");
-    Serial.print(quat.y(), 4);
-    Serial.print(" qY: ");
-    Serial.print(quat.x(), 4);
-    Serial.print(" qZ: ");
-    Serial.print(quat.z(), 4);
-    Serial.print("\t\t");
-    
+    Serial.print("qW: %d ", quat.w(), 4);
+    Serial.print("qX: %d ", quat.x(), 4);
+    Serial.print("qY: %d ", quat.y(), 4);
+    Serial.print("qZ: %d \n", quat.z(), 4);
 
     /* Display calibration status for each sensor. */
     uint8_t system, gyro, accel, mag = 0;
     bno.getCalibration(&system, &gyro, &accel, &mag);
-    printf("CALIBRATION: Sys=");
-    printf("%d",system);
-    printf(" Gyro=");
-    printf("%d",gyro);
-    printf(" Accel=");
-    printf("%d",accel);
-    printf(" Mag=");
-    printf("%d \n",mag);
+    printf("CALIBRATION: Sys= %d, Gyro= %d, Accel= %d, Mag= %d",system,gyro,accel,mag);
 
     delay(BNO055_SAMPLERATE_DELAY_MS);
 }
