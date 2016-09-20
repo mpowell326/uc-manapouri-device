@@ -11,7 +11,7 @@ INC = -I ./ -I lib/wiringBone/library/ -I lib/wiringBone/ -I lib/Adafruit_Sensor
 all: $(TARGET)
 	@echo Program has been compiled
 
-$(TARGET): $(OBJECTS) $(BUILDDIR)/BNO055.o $(BUILDDIR)/lux.o
+$(TARGET): $(OBJECTS) $(BUILDDIR)/BNO055.o $(BUILDDIR)/SparkFunTSL2561.o
 	$(CC) $^ $(CFLAGS) $(INC) -o $(TARGET) lib/wiringBone/BUILD/wiringBone.so -lpthread
 
 $(BUILDDIR)/lux.o: lib/Lux_TSL2561_Sensor/src/SparkFunTSL2561.cpp
