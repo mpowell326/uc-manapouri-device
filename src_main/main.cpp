@@ -122,7 +122,7 @@ int main(void)
     {
 
         /* Read sensor value and map to a percantage */
-        motor_signal = map(analogRead(AIN0) -100, 100, 0, 1023 );
+        motor_signal = map(analogRead(AIN0), -100, 100, 0, 1023 );
 
         /* Adjust the motor to the new speed */
         motor_setSpeed(MOTOR1_PIN, motor_signal);
