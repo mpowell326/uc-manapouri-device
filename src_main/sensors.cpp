@@ -175,7 +175,7 @@ void lux_print()
     
     // Print out the results:
     
-    printf("lux: %d ", lux);
+    printf("lux: %f ", lux);
     if (good) printf(" (good)\n"); else printf(" (BAD)\n");
   }
   else
