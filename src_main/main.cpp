@@ -110,8 +110,7 @@ void imu_print(void)
 
 int main(void)
 {
-    int adc_value, motor_signal;
-    // float volt;
+    int motor_signal;
 
     printf("Nemo is waking up...\n");
     setup();
@@ -123,13 +122,12 @@ int main(void)
     {
 
         /* Read sensor value and map to a percantage */
-        motorsignal = map(-100, 100, 0, analogRead(AIN0) );
+        motor_signal = map(analogRead(AIN0) -100, 100, 0, 1023 );
 
         /* Adjust the motor to the new speed */
-        motor_setSpeed(MOTOR1_PIN, motorsignal)
+        motor_setSpeed(MOTOR1_PIN, motor_signal);
 
         imu_print();
-
 
 
         delay(100);
