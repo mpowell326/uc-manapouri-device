@@ -6,13 +6,16 @@ TARGET = $(BUILDDIR)/nemo
 SOURCES = $(shell find $(SRCDIR) -type f -name *.cpp)
 OBJECTS = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.cpp=.o))
 CFLAGS = -g -Wall
-INC = -I ./ -I lib/wiringBone/library/ -I lib/wiringBone/ -I lib/Adafruit_Sensor2/ -I lib/Adafruit_BNO055-master/
+INC = -I ./ -I lib/wiringBone/library/ -I lib/wiringBone/ -I lib/Adafruit_Sensor2/ -I lib/Adafruit_BNO055-master/ -I lib/Lux_TSL2561_Sensor/src/
 
 all: $(TARGET)
 	@echo Program has been compiled
 
-$(TARGET): $(OBJECTS) $(BUILDDIR)/BNO055.o
+$(TARGET): $(OBJECTS) $(BUILDDIR)/BNO055.o $(BUILDDIR)/lux.o
 	$(CC) $^ $(CFLAGS) $(INC) -o $(TARGET) lib/wiringBone/BUILD/wiringBone.so -lpthread
+
+$(BUILDDIR)/lux.o: lib/Lux_TSL2561_Sensor/src/SparkFunTSL2561.cpp
+	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $(BUILDDIR)/SparkFunTSL2561.o $<
 
 $(BUILDDIR)/BNO055.o: lib/Adafruit_BNO055-master/Adafruit_BNO055.cpp
 	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $(BUILDDIR)/BNO055.o $<
