@@ -7,12 +7,7 @@
 #include "motors.h"
 #include "sensors.h"
 
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BNO055.h>
-#include <utility/imumaths.h>
 
-
-#define VOLT_DIV 5
 
 
 /**************************************************************************/
