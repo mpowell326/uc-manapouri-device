@@ -78,7 +78,7 @@ void motor_setSpeed(Pin motorpin, int percentage)
 {
     int pwm_width;
     // Calculate signal value, which should be between 1100us(max reverse) and 1900us(max forwards)
-    map(percentage, -100, 100, 1100,1900); 
+    pwm_width = map(percentage, -100, 100, 1100,1900); 
     
     // Add calibration/adjustment for motor differing in power for forwards/backwards
     // motor_getAgjustment();
