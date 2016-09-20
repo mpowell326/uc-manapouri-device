@@ -3,18 +3,19 @@
 #include <stdio.h>
 #include "Wiring.h"
 #include "UserPinConfig.h"
-// #include <Wire.h>
+#include "bbb_config.h"
+#include "motors.h"
+
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
 
 
 #define VOLT_DIV 5
-#define MOTOR1_PIN P9_16
 /* Set the delay between fresh samples */
 #define BNO055_SAMPLERATE_DELAY_MS (100)
 
-Adafruit_BNO055 bno = Adafruit_BNO055(55);
+Adafruit_BNO055 bno = Adafruit_BNO055();
 
 /**************************************************************************/
 /*
@@ -25,10 +26,19 @@ void setup(void)
 {
     // GPIO: LED Pin
     printf("Setup started.... \n");
-    pinMode(P8_10, OUTPUT);
-    setTimePeriod (MOTOR1_PIN, 20000);
-    setPulseWidth (MOTOR1_PIN, 1500);
+    motor_init(MOTOR1_PIN);
+    motor_init(MOTOR2_PIN);
+    motor_init(MOTOR3_PIN);
+    motor_init(MOTOR4_PIN);
+    
     delay(3000);
+
+    // imu_init();
+
+    // lux_init();
+
+    // ir_init();
+
 
     printf("Orientation Sensor Raw Data Test \n");
     /* Initialise the sensor */
@@ -68,7 +78,7 @@ void imu_print(void)
     imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
 
     /* Display the floating point data */
-    printf("X: %f, Y: %f, Z: %f \n", euler.x(),euler.y(), euler.z());
+    printf("X: %f, Y: %f, Z: %f     |   ", euler.x(),euler.y(), euler.z());
 
 
     // Quaternion data
@@ -76,12 +86,12 @@ void imu_print(void)
     printf("qW: %f ", (float)quat.w());
     printf("qX: %f ", (float)quat.x());
     printf("qY: %f ", (float)quat.y());
-    printf("qZ: %f \n", (float)quat.z());
+    printf("qZ: %f  |   ", (float)quat.z());
 
     /* Display calibration status for each sensor. */
     uint8_t system, gyro, accel, mag = 0;
     bno.getCalibration(&system, &gyro, &accel, &mag);
-    printf("CALIBRATION: Sys= %d, Gyro= %d, Accel= %d, Mag= %d",system,gyro,accel,mag);
+    printf("CALIBRATION: Sys= %d, Gyro= %d, Accel= %d, Mag= %d \n",system,gyro,accel,mag);
 
     delay(BNO055_SAMPLERATE_DELAY_MS);
 }
@@ -102,32 +112,27 @@ int main(void)
 {
     int adc_value, motor_signal;
     // float volt;
+
+    printf("Nemo is waking up...\n");
     setup();
 
-    printf("Hello\n");
     
-    /* start PWM */
-    // analogWrite(P9_16, 60);
-    // setDutyPercentage (P9_16,60);
+    
+
     while(1)
     {
-        adc_value = analogRead(AIN0);
-        // volt = 1000*adc_value/608;
 
-        motor_signal = map(adc_value, 0, 1023, 1100,1900); // Set signal value, which should be between 1100 and 1900
-        setPulseWidth (MOTOR1_PIN, motor_signal);
-        // printf("ADC0: %d | ", adc_value);
-        // printf("mVolts: %f\n", volt);
+        /* Read sensor value and map to a percantage */
+        motorsignal = map(-100, 100, 0, analogRead(AIN0) );
+
+        /* Adjust the motor to the new speed */
+        motor_setSpeed(MOTOR1_PIN, motorsignal)
+
         imu_print();
 
 
 
         delay(100);
-        // printf("%d",i++);
-        // digitalWrite(P8_10, LOW);
-        // delay(500);
-        // printf("%d",i++);
-        // digitalWrite(P8_10, HIGH);
     }
     return 0;
 }
