@@ -76,7 +76,7 @@ void motot_init(Pin motorpin)
 
 void motor_setSpeed(Pin motorpin, int percentage)
 {
-    int pwm_width, percentage;
+    int pwm_width;
     // Calculate signal value, which should be between 1100us(max reverse) and 1900us(max forwards)
     map(percentage, -100, 100, 1100,1900); 
     
