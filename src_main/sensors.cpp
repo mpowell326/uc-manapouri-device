@@ -79,9 +79,7 @@ void lux_printError(byte error)
   // If there's an I2C error, this function will
   // print out an explanation.
 {
-  printf("I2C error: ");
-  printf(error,DEC);
-  printf(", ");
+  printf("I2C error: %d, ", error);
   
   switch(error)
   {
@@ -156,7 +154,7 @@ void lux_print()
   {
     // getData() returned true, communication was successful
     
-    printf("data0: %d, data1: %d    | " data0, data1);
+    printf("data0: %d, data1: %d    | ", data0, data1);
 
   
     // To calculate lux, pass all your settings and readings
