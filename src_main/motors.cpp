@@ -67,9 +67,9 @@
 /*-----------------------------------------------------------------------------------------------*/
 /* Public Functions                                                                              */
 /*-----------------------------------------------------------------------------------------------*/
-void motot_init(Pin motorpin)
+void motor_init(Pin motorpin)
 {
-    pinMode(P8_10, OUTPUT);
+    pinMode(motorpin, OUTPUT);
     setTimePeriod (motorpin, PWM_PERIOD);
     setPulseWidth (motorpin, PWM_STOP_SIGNAL);
 }
