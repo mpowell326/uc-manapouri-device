@@ -24,7 +24,9 @@
 /*  Function Prototypes                                                                          */
 /*-----------------------------------------------------------------------------------------------*/
 void lux_init();
+void imu_init();
 void lux_print();
+void imu_print(void);
 
 #endif /* SENSOR_H */
 

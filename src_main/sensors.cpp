@@ -16,8 +16,19 @@
 /*-----------------------------------------------------------------------------------------------*/
 /* Defines                                                                                       */
 /*-----------------------------------------------------------------------------------------------*/
+/* Set the delay between fresh samples */
+#define BNO055_SAMPLERATE_DELAY_MS (100)
 
 
+// If gain = false (0), device is set to low gain (1X)
+// If gain = high (1), device is set to high gain (16X)
+#define LUX_GAIN    0
+
+// If time = 0, integration will be 13.7ms
+// If time = 1, integration will be 101ms
+// If time = 2, integration will be 402ms
+// If time = 3, use manual start / stop to perform your own integration
+#define LUX_TIME    2
 /*-----------------------------------------------------------------------------------------------*/
 /* Macros                                                                                        */
 /*-----------------------------------------------------------------------------------------------*/
@@ -39,15 +50,15 @@
 /*-----------------------------------------------------------------------------------------------*/
 /* Variables                                                                                     */
 /*-----------------------------------------------------------------------------------------------*/
+
+// Create a sensor object for the IMU:
+Adafruit_BNO055 bno_sensor = Adafruit_BNO055();
+
+
 // Create an SFE_TSL2561 object, here called "light":
-
 SFE_TSL2561 light;
-
-// Global variables:
-
-boolean gain;     // Gain setting, 0 = X1, 1 = X16;
-unsigned int ms;  // Integration ("shutter") time in milliseconds
-
+// Integration ("shutter") time in milliseconds
+unsigned int ms;
 
 /*===============================================================================================*/
 /*===============================================================================================*/
@@ -116,23 +127,11 @@ void lux_init()
   // If you would like to change either of these, you can
   // do so using the setTiming() command.
   
-  // If gain = false (0), device is set to low gain (1X)
-  // If gain = high (1), device is set to high gain (16X)
-
-  gain = 0;
-
-  // If time = 0, integration will be 13.7ms
-  // If time = 1, integration will be 101ms
-  // If time = 2, integration will be 402ms
-  // If time = 3, use manual start / stop to perform your own integration
-
-  unsigned char time = 2;
-
   // setTiming() will set the third parameter (ms) to the
   // requested integration time in ms (this will be useful later):
   
   printf("Set timing...\n");
-  light.setTiming(gain,time,ms);
+  light.setTiming(LUX_GAIN,LUX_TIME,ms);
 
   // To start taking measurements, power up the sensor:
   
@@ -142,6 +141,29 @@ void lux_init()
   // The sensor will now gather light during the integration time.
   // After the specified time, you can retrieve the result from the sensor.
   // Once a measurement occurs, another integration period will start.
+}
+
+
+void imu_init()
+{
+    printf("Orientation Sensor Raw Data Test \n");
+    /* Initialise the sensor */
+    if(!bno_sensor.begin())
+    {
+    /* There was a problem detecting the BNO055 ... check your connections */
+        printf("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!\n");
+        while(1);
+    }
+
+    delay(1000);
+
+    /* Display the current temperature */
+    int8_t temp = bno_sensor.getTemp();
+    printf("Current Temperature: %d C\n",temp);
+
+    bno_sensor.setExtCrystalUse(true);
+
+    printf("Calibration status values: 0=uncalibrated, 3=fully calibrated\n");
 }
 
 void lux_print()
@@ -171,9 +193,8 @@ void lux_print()
     
     // Perform lux calculation:
 
-    good = light.getLux(gain,ms,data0,data1,lux);
-    
-    // Print out the results:
+    good = light.getLux(LUX_GAIN,ms,data0,data1,lux);
+
     
     printf("lux: %f ", lux);
     if (good) printf(" (good)\n"); else printf(" (BAD)\n");
@@ -181,12 +202,41 @@ void lux_print()
   else
   {
     // getData() returned false because of an I2C error, inform the user.
-
     byte error = light.getError();
     lux_printError(error);
   }
 }
 
+
+void imu_print(void)
+{
+    // Possible vector values can be:
+    // - VECTOR_ACCELEROMETER - m/s^2
+    // - VECTOR_MAGNETOMETER  - uT
+    // - VECTOR_GYROSCOPE     - rad/s
+    // - VECTOR_EULER         - degrees
+    // - VECTOR_LINEARACCEL   - m/s^2
+    // - VECTOR_GRAVITY       - m/s^2
+    imu::Vector<3> euler = bno_sensor.getVector(Adafruit_BNO055::VECTOR_EULER);
+
+    /* Display the floating point data */
+    printf("X: %f, Y: %f, Z: %f     |   ", euler.x(),euler.y(), euler.z());
+
+
+    // Quaternion data
+    imu::Quaternion quat = bno_sensor.getQuat();
+    printf("qW: %f ", (float)quat.w());
+    printf("qX: %f ", (float)quat.x());
+    printf("qY: %f ", (float)quat.y());
+    printf("qZ: %f  |   ", (float)quat.z());
+
+    /* Display calibration status for each sensor. */
+    uint8_t system, gyro, accel, mag = 0;
+    bno_sensor.getCalibration(&system, &gyro, &accel, &mag);
+    printf("CALIBRATION: Sys= %d, Gyro= %d, Accel= %d, Mag= %d \n",system,gyro,accel,mag);
+
+    delay(BNO055_SAMPLERATE_DELAY_MS);
+}
 /**************************************************************************************************
 *   adc.c
 **************************************************************************************************/
