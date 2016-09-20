@@ -5,6 +5,7 @@
 #include "UserPinConfig.h"
 #include "bbb_config.h"
 #include "motors.h"
+#include "sensors.h"
 
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
@@ -35,29 +36,29 @@ void setup(void)
 
     // imu_init();
 
-    // lux_init();
+    lux_init();
 
     // ir_init();
 
 
-    printf("Orientation Sensor Raw Data Test \n");
-    /* Initialise the sensor */
-    if(!bno.begin())
-    {
-    /* There was a problem detecting the BNO055 ... check your connections */
-        printf("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!\n");
-        while(1);
-    }
+    // printf("Orientation Sensor Raw Data Test \n");
+    // /* Initialise the sensor */
+    // if(!bno.begin())
+    // {
+    // /* There was a problem detecting the BNO055 ... check your connections */
+    //     printf("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!\n");
+    //     while(1);
+    // }
 
-    delay(1000);
+    // delay(1000);
 
-    /* Display the current temperature */
-    int8_t temp = bno.getTemp();
-    printf("Current Temperature: %d C\n",temp);
+    // /* Display the current temperature */
+    // int8_t temp = bno.getTemp();
+    // printf("Current Temperature: %d C\n",temp);
 
-    bno.setExtCrystalUse(true);
+    // bno.setExtCrystalUse(true);
 
-    printf("Calibration status values: 0=uncalibrated, 3=fully calibrated\n");
+    // printf("Calibration status values: 0=uncalibrated, 3=fully calibrated\n");
 }
 
 /**************************************************************************/
@@ -127,10 +128,8 @@ int main(void)
         /* Adjust the motor to the new speed */
         motor_setSpeed(MOTOR1_PIN, motor_signal);
 
-        imu_print();
-        int8_t temp = bno.getTemp();
-        printf("Current Temperature: %d C\n",temp);
-
+        // imu_print();
+        lux_print();
         delay(100);
     }
     return 0;
