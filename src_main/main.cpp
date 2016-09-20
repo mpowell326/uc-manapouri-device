@@ -128,7 +128,8 @@ int main(void)
         motor_setSpeed(MOTOR1_PIN, motor_signal);
 
         imu_print();
-
+        int8_t temp = bno.getTemp();
+        printf("Current Temperature: %d C\n",temp);
 
         delay(100);
     }
