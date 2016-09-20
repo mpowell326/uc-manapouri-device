@@ -24,7 +24,7 @@
 /*  Function Prototypes                                                                          */
 /*-----------------------------------------------------------------------------------------------*/
 void motor_init(Pin motorpin);
-void motor_setSpeed(Pin motorpin, percentage);
+void motor_setSpeed(Pin motorpin, int percentage);
 
 #endif /* MOTORS_H */
 

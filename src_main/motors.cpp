@@ -56,10 +56,10 @@
 /* Private Functions:                                                                            */
 /*-----------------------------------------------------------------------------------------------*/
 
-int motor_getAgjustment()
-{
-    // return value for motor adujsted for which direction
-}
+// int motor_getAgjustment()
+// {
+//     // return value for motor adujsted for which direction
+// }
 
 
   
@@ -74,9 +74,9 @@ void motot_init(Pin motorpin)
     setPulseWidth (motorpin, PWM_STOP_SIGNAL);
 }
 
-void motor_setSpeed(Pin motorpin, percentage)
+void motor_setSpeed(Pin motorpin, int percentage)
 {
-    int pwm_width;
+    int pwm_width, percentage;
     // Calculate signal value, which should be between 1100us(max reverse) and 1900us(max forwards)
     map(percentage, -100, 100, 1100,1900); 
     
