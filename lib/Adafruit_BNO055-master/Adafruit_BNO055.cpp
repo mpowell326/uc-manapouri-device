@@ -64,19 +64,16 @@ bool Adafruit_BNO055::begin(adafruit_bno055_opmode_t mode)
 #ifdef ESP8266
   Wire.setClockStretchLimit(1000); // Allow for 1000us of clock stretching
 #endif
-printf("    --------------------\n");
   /* Make sure we have the right device */
   uint8_t id = read8(BNO055_CHIP_ID_ADDR);
   if(id != BNO055_ID)
   {
     delay(1000); // hold on for boot
-    printf("    --------------------\n");
     id = read8(BNO055_CHIP_ID_ADDR);
     if(id != BNO055_ID) {
       return false;  // still not? ok bail
     }
   }
-printf("    --------------------\n");
   /* Switch to config mode (just in case since this is the default) */
   setMode(OPERATION_MODE_CONFIG);
 

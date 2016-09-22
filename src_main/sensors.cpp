@@ -121,35 +121,37 @@ void lux_printError(byte error)
 /*-----------------------------------------------------------------------------------------------*/
 void lux_init()
 {
-  light.begin();
+    printf("Initialsing Lux Sensor ...\n\n");
+
+    light.begin();
 
 
-  // The light sensor has a default integration time of 402ms,
-  // and a default gain of low (1X).
-  
-  // If you would like to change either of these, you can
-  // do so using the setTiming() command.
-  
-  // setTiming() will set the third parameter (ms) to the
-  // requested integration time in ms (this will be useful later):
-  
-  printf("Set timing...\n");
-  light.setTiming(LUX_GAIN,LUX_TIME,ms);
+    // The light sensor has a default integration time of 402ms,
+    // and a default gain of low (1X).
 
-  // To start taking measurements, power up the sensor:
-  
-  printf("Powerup...\n");
-  light.setPowerUp();
-  
-  // The sensor will now gather light during the integration time.
-  // After the specified time, you can retrieve the result from the sensor.
-  // Once a measurement occurs, another integration period will start.
+    // If you would like to change either of these, you can
+    // do so using the setTiming() command.
+
+    // setTiming() will set the third parameter (ms) to the
+    // requested integration time in ms (this will be useful later):
+
+    printf("Set timing...\n");
+    light.setTiming(LUX_GAIN,LUX_TIME,ms);
+
+    // To start taking measurements, power up the sensor:
+
+    printf("Powerup...\n");
+    light.setPowerUp();
+
+    // The sensor will now gather light during the integration time.
+    // After the specified time, you can retrieve the result from the sensor.
+    // Once a measurement occurs, another integration period will start.
 }
 
 
 void imu_init()
 {
-    printf("Orientation Sensor Raw Data Test \n");
+    printf("Initialsing IMU Sensor ...\n \n");
     /* Initialise the sensor */
     if(!bno_sensor.begin())
     {
