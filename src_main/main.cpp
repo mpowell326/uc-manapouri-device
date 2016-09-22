@@ -26,7 +26,7 @@ void setup(void)
     
     delay(3000);
 
-    // imu_init();
+    imu_init();
 
     lux_init();
 
@@ -56,7 +56,7 @@ int main(void)
         /* Adjust the motor to the new speed */
         // motor_setSpeed(MOTOR1_PIN, motor_signal);
 
-        // imu_print();
+        imu_print();
         lux_print();
         delay(100);
     }
