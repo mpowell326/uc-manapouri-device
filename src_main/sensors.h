@@ -1,15 +1,15 @@
 /*!
-*   motors.cpp
+*   \sensors.cpp
 *
-*   Purpose:            Provide an interface to control the T100 thrusters with the use of PWMs
+*   Purpose:            Module to read various sensor values
 *
-*   Created:            xx/yy/2016  ...    
+*   Created:            xx/yy/2016  ...
+*   Last Modified:      
 */
 
-#ifndef MOTORS_H
-#define MOTORS_H
+#ifndef SENSOR_H
+#define SENSOR_H
 
-#include "Wiring.h"
 
 /*-----------------------------------------------------------------------------------------------*/
 /*  Defines                                                                                      */
@@ -23,11 +23,13 @@
 /*-----------------------------------------------------------------------------------------------*/
 /*  Function Prototypes                                                                          */
 /*-----------------------------------------------------------------------------------------------*/
-void motor_init(Pin motorpin);
-void motor_setSpeed(Pin motorpin, int percentage);
+void lux_init();
+void imu_init();
+void lux_print();
+void imu_print(void);
 
-#endif /* MOTORS_H */
+#endif /* SENSOR_H */
 
 /**************************************************************************************************
-*   End of header file motors.h
+*   End of header file sensors.h
 **************************************************************************************************/

@@ -5,6 +5,3 @@ echo "Setting up the default gateway"
 
 echo "Updating the nameserver entry"
 echo "nameserver 8.8.8.8" >> /etc/resolv.conf
-
-echo "Setting the time using the New Zealand ntp pool"
-/usr/bin/ntpdate -b -s -u nz.pool.ntp.org

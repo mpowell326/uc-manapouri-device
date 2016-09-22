@@ -1,0 +1,52 @@
+----------------------------------------------------------
+Scipt to expand git dir upon recieving a commit (.e.g push to remote)
+
+~/fyp_m19-base.githooks/post-receive 
+----------------------------------------------------------
+
+
+#!/usr/bin/env ruby
+# post-receive
+
+# 1. Read STDIN (Format: "from_commit to_commit branch_name")
+from, to, branch = ARGF.read.split " "
+
+# 2. Only deploy if master branch was pushed
+#if (branch =~ /master$/) == nil
+#    puts "Received branch #{branch}, not deploying."
+#    exit
+#end
+
+# 3. Copy files to deploy directory
+deploy_to_dir = File.expand_path('~/fyp_m19-expanded')
+`GIT_WORK_TREE="#{deploy_to_dir}" git checkout -f develop`
+puts "DEPLOY: develop(#{to}) copied to '#{deploy_to_dir}'"
+
+# 4.TODO: Deployment Tasks
+# i.e.: Run Puppet Apply, Restart Daemons, etc
+
+#puts "Changing dir"
+Dir.chdir("/home/debian/fyp_m19-expanded")
+puts `pwd`
+
+
+# Make sure all files modified time isn't ahead (BBB clock is wrong)
+`find . -exec touch {} \;`
+
+
+puts "Building"
+`make`
+
+#puts "Running"
+#`sudo ~/fyp_m19-expanded/bin/nemo | ssh morgan@192.168.7.1`
+
+
+
+# old stuff:
+# git --git-dir=~/fyp_m19-expanded checkout -f
+# cd ~/fyp_m19-expanded
+# exec make
+
+##!/bin/bash
+#unset GIT_INDEX_FILE
+#git --work-tree=/var/www/html --git-dir=/home/demo/proj/.git checkout -f
