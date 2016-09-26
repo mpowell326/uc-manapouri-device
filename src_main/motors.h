@@ -1,5 +1,5 @@
 /*!
-*   motors.cpp
+*   motors.h
 *
 *   Purpose:            Provide an interface to control the T100 thrusters with the use of PWMs
 *

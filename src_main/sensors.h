@@ -1,5 +1,5 @@
 /*!
-*   \sensors.cpp
+*   \sensors.h
 *
 *   Purpose:            Module to read various sensor values
 *
@@ -27,6 +27,9 @@ void lux_init();
 void imu_init();
 void lux_print();
 void imu_print(void);
+int getPressure_pa(Pin sensorPin);
+int get_IRdistance_cm(Pin sensorPin);
+
 
 #endif /* SENSOR_H */
 

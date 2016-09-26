@@ -1,4 +1,11 @@
-/* Hello World program */
+/*!
+*   main.cpp
+*
+*   Purpose:            Program to run on beaglebone black for controlling the tailrace inspcetion device (Nemo)
+*
+*   Created:            xx/yy/2016  ...
+*   Last Modified:      
+*/
 
 #include <stdio.h>
 #include "Wiring.h"
@@ -49,13 +56,14 @@ int main(void)
 
     while(1)
     {
+        
 
         /* Read sensor value and map to a percantage */
-        // motor_signal = map(analogRead(AIN0), -100, 100, 0, 1023 );
+        // motor_signal = map(analogRead(AIN0), 0, 1023, -100, 100 );
 
         /* Adjust the motor to the new speed */
         // motor_setSpeed(MOTOR1_PIN, motor_signal);
-
+        printf("Pressure (abs): %d (Pa)", getPressure_pa(PRESSURE_SENSOR_PIN));
         imu_print();
         lux_print();
         delay(100);

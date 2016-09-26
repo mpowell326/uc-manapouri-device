@@ -22,17 +22,18 @@
 #define I2C2_SCL        P9_19
 #define I2C2_SDA        P9_20
 
+/* Serial communication with Power Distribution Board */
+// #define SERIAL_RX       PX_YY
+// #define SERIAL_TX       PX_YY
+
 /* IR sensor ADC pins */
-#define IRup_pin        AIN0
-#define IRdown_pin      AIN1
-#define IRleft_pin      AIN2
-#define IRright_pin     AIN3
+#define IRup_PIN        AIN0
+#define IRdown_PIN      AIN1
+#define IRleft_PIN      AIN2
+#define IRright_PIN     AIN3
 
 /* Pressure sensor adc pin */
-#define PRESSURE_SENSOR_pin    AIN4
-
-/* Serial to Power Distribution Board */
-// #define serial pins...
+#define PRESSURE_SENSOR_PIN    AIN4
 
 
 

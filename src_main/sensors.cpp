@@ -32,6 +32,12 @@
 // If time = 2, integration will be 402ms
 // If time = 3, use manual start / stop to perform your own integration
 #define LUX_TIME    2
+
+
+
+#define PSI_TO_PASCAL       6894.76 //psi
+#define PASCAL_TO_ATM       101325  //Pascal
+#define PASCAL_TO_BAR       100000  //Pascal
 /*-----------------------------------------------------------------------------------------------*/
 /* Macros                                                                                        */
 /*-----------------------------------------------------------------------------------------------*/
@@ -242,6 +248,28 @@ void imu_print(void)
 
     delay(BNO055_SAMPLERATE_DELAY_MS);
 }
+
+
+/* Return the gauge pressure in Pascal */
+int getPressure_pa(Pin sensorPin)
+{
+    int mvolt;
+
+    mvolt = map(analogRead(sensorPin),0,1023,0,5000);
+
+    return map(mvolt, 500, 4500, 0, 100*PSI_TO_PASCAL)
+}
+
+
+/* Return the distance measured by an IR sensor(2Y0A710) */
+int get_IRdistance_cm(Pin sensorPin)
+{
+    int distance;
+
+    distance = map(analogRead(sensorPin),0,1023, 150, 0);
+
+    return 0;
+}
 /**************************************************************************************************
-*   adc.c
+*   sensor.cpp
 **************************************************************************************************/
