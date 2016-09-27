@@ -1,6 +1,6 @@
 /* INVERT ELEVATION OF 2ND TAILRACE TUNNEL */
 
-invert_elevation[961][2] = { 
+tunnel_elevation[961][2] = { 
 	{1110.0,-13.013},
 	{1120.0,-14.15},
 	{1130.0,-15.318},
