@@ -14,6 +14,7 @@
 #define BRAINS_H
 
 
+
 /*-----------------------------------------------------------------------------------------------*/
 /*  Defines                                                                                      */
 /*-----------------------------------------------------------------------------------------------*/
@@ -32,10 +33,10 @@ typedef enum {
 
 class Pose {
     // Device pose
-    imu::Vector<3> orientation;
-    imu::Vector<2> position;
+    double orientation[3];
+    double position[3];
     int distance;
-}
+};
 
 
 class Device {
@@ -58,7 +59,7 @@ class Device {
     int IR1, IR2, IR3, IR4;
 
     // Current Motor speed/percentage
-    int[4] motor_percentage;
+    int motor_percentage[4];
 
 
     void surfaceDevice();
@@ -70,13 +71,13 @@ class Device {
     bool init();
 
 public:
-    void Device(void);
+    Device(void);
     void begin();
     void begin(device_state init_state, int prev_time);
     void readSensors();
     void state_controller();
     void updateTravelTime(int time);
-}
+};
 
 
 

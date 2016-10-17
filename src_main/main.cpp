@@ -11,6 +11,9 @@
 #include <ctime>
 #include "bbb_config.h"
 #include "brains.h"
+#include "Wiring.h"
+
+using namespace std;
 
 
 #define LOG_FILENAME "../device_log.txt"
@@ -18,10 +21,10 @@
 
 
 
-void logData(* fptr, *char data)
-{
-    printf(data);
-}
+// void logData(FILE* fptr, char* data)
+// {
+//     printf(data);
+// }
 
 
 
@@ -35,18 +38,18 @@ int main(void)
     Device nemo;
 
     // Open file to write log to
-    logFile = openFile( LOG_FILENAME )
+    // logFile = openFile( LOG_FILENAME )
     
 
     // Check if reboot has occured. If so continue from previous data...
-    if(getPrevLog(logFile) != None)
-    {
-        nemo.begin(prevState, prevTime);
-    }
-    else{
+    // if(getPrevLog(logFile) != None)
+    // {
+    //     nemo.begin(prevState, prevTime);
+    // }
+    // else{
         nemo.begin();
-        logFile_init();
-    }
+        // logFile_init();
+    // }
     
 
     while(1)
@@ -63,7 +66,7 @@ int main(void)
         nemo.state_controller();
 
         // Log recorded data to disk
-        logData(nemo.get_logData());
+        // logData(nemo.get_logData());
 
 
         delay(1000);         // Probably should add a basic task scheduler

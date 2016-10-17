@@ -244,7 +244,7 @@ int getPressure_pa(adcPin sensorPin)
 
     mvolt = map(analogRead(sensorPin),0,1023,0,5000);
 
-    return map(mvolt, 500, 4500, 0, 100*PSI_TO_PASCAL)
+    return map(mvolt, 500, 4500, 0, 100*PSI_TO_PASCAL);
 }
 
 /* Return the gauge pressure in mH20 */
@@ -254,7 +254,7 @@ int getPressure_mH2O(adcPin sensorPin)
 
     mvolt = map(analogRead(sensorPin),0,1023,0,5000);
 
-    return map(mvolt, 500, 4500, 0, 100*PSI_TO_PASCAL*PASCAL_TO_MH2O)
+    return map(mvolt, 500, 4500, 0, 100*PSI_TO_PASCAL*PASCAL_TO_MH2O);
 }
 
 

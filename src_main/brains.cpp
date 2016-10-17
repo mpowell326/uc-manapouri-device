@@ -71,12 +71,16 @@ void Device::surfaceDevice()
     // Check if device is in the water (below 1mH20)
     if(pressure >= 1)
     {
-        setTarget();
+        // setTarget();
         adjustPose();
     }
     else
     {
-        disableMotors();
+        // Disable Thrusters
+        motor_setSpeed( MOTOR1_PIN, 0 );
+        motor_setSpeed( MOTOR2_PIN, 0 );
+        motor_setSpeed( MOTOR3_PIN, 0 );
+        motor_setSpeed( MOTOR4_PIN, 0 );
     }
 }
 
