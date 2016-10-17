@@ -8,66 +8,65 @@
 */
 
 #include <stdio.h>
-#include "Wiring.h"
-#include "UserPinConfig.h"
+#include <ctime>
 #include "bbb_config.h"
-#include "motors.h"
-#include "sensors.h"
-
-#include "tunnel_elevation.h"
+#include "brains.h"
 
 
+#define LOG_FILENAME "../device_log.txt"
 
-/**************************************************************************/
-/*
-    Arduino setup function (automatically called at startup)
-*/
-/**************************************************************************/
-void setup(void)
+
+
+
+void logData(* fptr, *char data)
 {
-    // GPIO: LED Pin
-    printf("Setup started.... \n");
-    // motor_init(MOTOR1_PIN);
-    // motor_init(MOTOR2_PIN);
-    // motor_init(MOTOR3_PIN);
-    // motor_init(MOTOR4_PIN);
-    
-    delay(3000);
-
-    imu_init();
-
-    lux_init();
-
-    // ir_init();
-
-
-
+    printf(data);
 }
+
 
 
 int main(void)
 {
-    int motor_signal;
+    // System Time
+    std::clock_t tics = std::clock();
+    std::clock_t time = tics / (double) CLOCKS_PER_SEC;
 
-    printf("Nemo is waking up...\n");
-    setup();
+    // Create deive object
+    Device nemo;
 
+    // Open file to write log to
+    logFile = openFile( LOG_FILENAME )
     
+
+    // Check if reboot has occured. If so continue from previous data...
+    if(getPrevLog(logFile) != None)
+    {
+        nemo.begin(prevState, prevTime);
+    }
+    else{
+        nemo.begin();
+        logFile_init();
+    }
     
 
     while(1)
     {
-        
+        // Update the time
+        tics = std::clock();
+        time = tics / (double) CLOCKS_PER_SEC;
+        nemo.updateTravelTime( time );
 
-        /* Read sensor value and map to a percantage */
-        // motor_signal = map(analogRead(AIN0), 0, 1023, -100, 100 );
+        // Get the current readings from the sensors
+        nemo.readSensors();
 
-        /* Adjust the motor to the new speed */
-        // motor_setSpeed(MOTOR1_PIN, motor_signal);
-        printf("Pressure (abs): %d (Pa)", getPressure_pa(PRESSURE_SENSOR_PIN));
-        imu_print();
-        lux_print();
-        delay(100);
+        // Run appropriate functions/operations for current state
+        nemo.state_controller();
+
+        // Log recorded data to disk
+        logData(nemo.get_logData());
+
+
+        delay(1000);         // Probably should add a basic task scheduler
     }
     return 0;
 }

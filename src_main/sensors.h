@@ -25,10 +25,10 @@
 /*-----------------------------------------------------------------------------------------------*/
 void lux_init();
 void imu_init();
-void lux_print();
+double getLux();
 void imu_print(void);
-int getPressure_pa(Pin sensorPin);
-int get_IRdistance_cm(Pin sensorPin);
+int getPressure_pa(adcPin sensorPin);
+int get_IRdistance_cm(adcPin sensorPin);
 
 
 #endif /* SENSOR_H */

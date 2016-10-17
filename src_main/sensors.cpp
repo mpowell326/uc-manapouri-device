@@ -38,6 +38,7 @@
 #define PSI_TO_PASCAL       6894.76 //psi
 #define PASCAL_TO_ATM       101325  //Pascal
 #define PASCAL_TO_BAR       100000  //Pascal
+#define PASCAL_TO_MH2O     0.0001019744289  
 /*-----------------------------------------------------------------------------------------------*/
 /* Macros                                                                                        */
 /*-----------------------------------------------------------------------------------------------*/
@@ -81,46 +82,32 @@ unsigned int ms;
 /* Private Functions:                                                                            */
 /*-----------------------------------------------------------------------------------------------*/
 
-  // void readsensors(int sensorpin){
-//     int sensorvalue  = analogRead(sensorpin)
-//     sensorvalue = sensorvalue*4.9 // voltage divider values to give actual value
-// }
-
-
-
-
-
-
-
-
-
-
+// If there's an I2C error, this function will
+// print out an explanation.
 void lux_printError(byte error)
-  // If there's an I2C error, this function will
-  // print out an explanation.
 {
-  printf("I2C error: %d, ", error);
-  
-  switch(error)
-  {
-    case 0:
-      printf("success\n");
-      break;
-    case 1:
-      printf("data too long for transmit buffer\n");
-      break;
-    case 2:
-      printf("received NACK on address (disconnected?)\n");
-      break;
-    case 3:
-      printf("received NACK on data\n");
-      break;
-    case 4:
-      printf("other error\n");
-      break;
-    default:
-      printf("unknown error\n");
-  }
+    printf("I2C error: %d, ", error);
+
+    switch(error)
+    {
+        case 0:
+            printf("success\n");
+            break;
+        case 1:
+            printf("data too long for transmit buffer\n");
+            break;
+        case 2:
+            printf("received NACK on address (disconnected?)\n");
+            break;
+        case 3:
+            printf("received NACK on data\n");
+            break;
+        case 4:
+            printf("other error\n");
+            break;
+        default:
+            printf("unknown error\n");
+    }
 }
 /*-----------------------------------------------------------------------------------------------*/
 /* Public Functions                                                                              */
@@ -177,45 +164,45 @@ void imu_init()
     printf("Calibration status values: 0=uncalibrated, 3=fully calibrated\n");
 }
 
-void lux_print()
+double getLux()
 {
+    unsigned int data0, data1;
+    double lux = 0;    // Resulting lux value
+
+    if (light.getData(data0,data1))
+    {
+        // getData() returned true, communication was successful
+
+        printf("data0: %d, data1: %d    | ", data0, data1);
 
 
-  unsigned int data0, data1;
-  
-  if (light.getData(data0,data1))
-  {
-    // getData() returned true, communication was successful
-    
-    printf("data0: %d, data1: %d    | ", data0, data1);
+        // To calculate lux, pass all your settings and readings
+        // to the getLux() function.
 
-  
-    // To calculate lux, pass all your settings and readings
-    // to the getLux() function.
-    
-    // The getLux() function will return 1 if the calculation
-    // was successful, or 0 if one or both of the sensors was
-    // saturated (too much light). If this happens, you can
-    // reduce the integration time and/or gain.
-    // For more information see the hookup guide at: https://learn.sparkfun.com/tutorials/getting-started-with-the-tsl2561-luminosity-sensor
-  
-    double lux;    // Resulting lux value
-    boolean good;  // True if neither sensor is saturated
-    
-    // Perform lux calculation:
+        // The getLux() function will return 1 if the calculation
+        // was successful, or 0 if one or both of the sensors was
+        // saturated (too much light). If this happens, you can
+        // reduce the integration time and/or gain.
+        // For more information see the hookup guide at: https://learn.sparkfun.com/tutorials/getting-started-with-the-tsl2561-luminosity-sensor
 
-    good = light.getLux(LUX_GAIN,ms,data0,data1,lux);
+        boolean good;  // True if neither sensor is saturated
 
-    
-    printf("lux: %f ", lux);
-    if (good) printf(" (good)\n"); else printf(" (BAD)\n");
-  }
-  else
-  {
-    // getData() returned false because of an I2C error, inform the user.
-    byte error = light.getError();
-    lux_printError(error);
-  }
+        // Perform lux calculation:
+
+        good = light.getLux(LUX_GAIN,ms,data0,data1,lux);
+
+
+        printf("lux: %f ", lux);
+        if (good) printf(" (good)\n"); else printf(" (BAD)\n");
+    }
+    else
+    {
+        // getData() returned false because of an I2C error, inform the user.
+        byte error = light.getError();
+        lux_printError(error);
+    }
+
+    return lux;
 }
 
 
@@ -251,7 +238,7 @@ void imu_print(void)
 
 
 /* Return the gauge pressure in Pascal */
-int getPressure_pa(Pin sensorPin)
+int getPressure_pa(adcPin sensorPin)
 {
     int mvolt;
 
@@ -260,9 +247,19 @@ int getPressure_pa(Pin sensorPin)
     return map(mvolt, 500, 4500, 0, 100*PSI_TO_PASCAL)
 }
 
+/* Return the gauge pressure in mH20 */
+int getPressure_mH2O(adcPin sensorPin)
+{
+    int mvolt;
+
+    mvolt = map(analogRead(sensorPin),0,1023,0,5000);
+
+    return map(mvolt, 500, 4500, 0, 100*PSI_TO_PASCAL*PASCAL_TO_MH2O)
+}
+
 
 /* Return the distance measured by an IR sensor(2Y0A710) */
-int get_IRdistance_cm(Pin sensorPin)
+int get_IRdistance_cm(adcPin sensorPin)
 {
     int distance;
 
