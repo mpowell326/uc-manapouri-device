@@ -13,7 +13,8 @@
 #ifndef BRAINS_H
 #define BRAINS_H
 
-
+using namespace std;
+#include <vector>
 
 /*-----------------------------------------------------------------------------------------------*/
 /*  Defines                                                                                      */
@@ -32,8 +33,9 @@ typedef enum {
 
 
 class Pose {
+public:
     // Device pose
-    double orientation[3];
+    double * orientation;
     double position[3];
     int distance;
 };
@@ -56,15 +58,16 @@ class Device {
 
     // Current sensor readings
     int pressure;
-    int IR1, IR2, IR3, IR4;
+    int IRtop, IRleft, IRbottom, IRright;
+    double lux;
 
     // Current Motor speed/percentage
-    int motor_percentage[4];
+    int * motor_percentage;
 
 
     void surfaceDevice();
-    void get_orientationControl();
-    void get_positionControl();
+    std::vector<int> get_orientationControl();
+    std::vector<int> get_positionControl();
     void adjustPose();
     void updateInvertElev();
     bool test_services();
@@ -77,6 +80,8 @@ public:
     void readSensors();
     void state_controller();
     void updateTravelTime(int time);
+    int getInvertElev();
+    int get_distance();
 };
 
 

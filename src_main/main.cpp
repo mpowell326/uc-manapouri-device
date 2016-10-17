@@ -31,8 +31,8 @@ using namespace std;
 int main(void)
 {
     // System Time
-    std::clock_t tics = std::clock();
-    std::clock_t time = tics / (double) CLOCKS_PER_SEC;
+    double tics = std::clock();
+    double time = tics / (double) CLOCKS_PER_SEC;
 
     // Create deive object
     Device nemo;
@@ -55,8 +55,9 @@ int main(void)
     while(1)
     {
         // Update the time
-        tics = std::clock();
+        tics = clock();
         time = tics / (double) CLOCKS_PER_SEC;
+
         nemo.updateTravelTime( time );
 
         // Get the current readings from the sensors
@@ -68,7 +69,9 @@ int main(void)
         // Log recorded data to disk
         // logData(nemo.get_logData());
 
-
+        printf("Time: %f, Distance: %d, Elev: %d",  time, nemo.get_distance(), nemo.getInvertElev());
+        cout << "" << endl;
+        
         delay(1000);         // Probably should add a basic task scheduler
     }
     return 0;

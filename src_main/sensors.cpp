@@ -10,11 +10,8 @@
 /*-----------------------------------------------------------------------------------------------*/
 /* Includes                                                                                      */
 /*-----------------------------------------------------------------------------------------------*/
-#include <SparkFunTSL2561.h>
-#include "Wiring.h"
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BNO055.h>
-#include <utility/imumaths.h>
+
+#include "sensors.h"
 
 /*-----------------------------------------------------------------------------------------------*/
 /* Defines                                                                                       */
@@ -236,6 +233,11 @@ void imu_print(void)
     delay(BNO055_SAMPLERATE_DELAY_MS);
 }
 
+double* imu_getOrientation()
+{
+    return &bno_sensor.getVector(Adafruit_BNO055::VECTOR_EULER)[0];
+}
+
 
 /* Return the gauge pressure in Pascal */
 int getPressure_pa(adcPin sensorPin)
@@ -265,7 +267,7 @@ int get_IRdistance_cm(adcPin sensorPin)
 
     distance = map(analogRead(sensorPin),0,1023, 150, 0);
 
-    return 0;
+    return distance;
 }
 /**************************************************************************************************
 *   sensor.cpp

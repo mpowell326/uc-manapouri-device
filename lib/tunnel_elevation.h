@@ -4,7 +4,7 @@
  *      col_2: -ve elevation in mm          *
  * ---------------------------------------- */
 
-int tunnel_elevation[961][2] = { 
+int tunnel_elevation[962][2] = { 
 	{1110,1301},
 	{1120,1415},
 	{1130,1531},

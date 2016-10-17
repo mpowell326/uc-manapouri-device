@@ -11,6 +11,13 @@
 #define SENSOR_H
 
 
+// using namespace std;
+#include <SparkFunTSL2561.h>
+#include "Wiring.h"
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BNO055.h>
+#include <utility/imumaths.h>
+// #include <vector>
 /*-----------------------------------------------------------------------------------------------*/
 /*  Defines                                                                                      */
 /*-----------------------------------------------------------------------------------------------*/
@@ -27,8 +34,11 @@ void lux_init();
 void imu_init();
 double getLux();
 void imu_print(void);
+double* imu_getOrientation();
 int getPressure_pa(adcPin sensorPin);
+int getPressure_mH2O(adcPin sensorPin);
 int get_IRdistance_cm(adcPin sensorPin);
+
 
 
 #endif /* SENSOR_H */

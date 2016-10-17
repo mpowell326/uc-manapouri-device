@@ -14,7 +14,7 @@ all: $(TARGET)
 $(TARGET): $(OBJECTS) $(BUILDDIR)/BNO055.o $(BUILDDIR)/SparkFunTSL2561.o
 	$(CC) $^ $(CFLAGS) $(INC) -o $(TARGET) lib/wiringBone/BUILD/wiringBone.so -lpthread
 
-$(BUILDDIR)/lux.o: lib/Lux_TSL2561_Sensor/src/SparkFunTSL2561.cpp
+$(BUILDDIR)/SparkFunTSL2561.o: lib/Lux_TSL2561_Sensor/src/SparkFunTSL2561.cpp
 	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $(BUILDDIR)/SparkFunTSL2561.o $<
 
 $(BUILDDIR)/BNO055.o: lib/Adafruit_BNO055-master/Adafruit_BNO055.cpp

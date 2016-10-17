@@ -18,7 +18,7 @@
 #include "Wiring.h"
 #include "sensors.h"
 #include "tunnel_elevation.h"
-
+#include "motors.h"
 
 /*-----------------------------------------------------------------------------------------------*/
 /* Defines                                                                                       */
@@ -84,30 +84,47 @@ void Device::surfaceDevice()
     }
 }
 
-void Device::get_orientationControl()
+
+std::vector <int> Device::get_orientationControl()
 {
     // pid control to keep deice straight using imu data
+    std::vector<int> percentages(4);
+    percentages.assign ( 4, 1);
+    return percentages;
 
 }
 
 
-void Device::get_positionControl()
+std::vector <int> Device::get_positionControl()
 {
     // pid control using pressure data
 
     // possibly use acceleration and time to get an idea of distance moved
 
     // readjust using IR data
+    std::vector<int> percentages(4);
+    percentages.assign ( 4,1 );
+    return percentages;
 
 }
 
 
 void Device::adjustPose()
 {
+    std::vector<int> motor_percentages1, motor_percentages2;
 
-    motor_percentage = get_orientationControl();   //IMU
-    motor_percentage += get_positionControl();     //IR and pressure
+    motor_percentages1 = get_orientationControl();
+    motor_percentages2 = get_positionControl();
 
+    for( int i=0; i<4; i++)
+    {
+        motor_percentage[i] = motor_percentages1[i] + motor_percentages2[i];
+    }
+    
+    // std::transform(motor_percentages1.begin( ), motor_percentages1.end( ), motor_percentages2.begin( ), motor_percentages1.begin( ),std::plus<int>( ));
+    // motor_percentage_ = &get_orientationControl()[0];   //IMU
+    // motor_percentage = motor_percentage + &get_positionControl()[0];     //IR and pressure
+    
     /* Adjust the motors to the new speed */
     motor_setSpeed(MOTOR1_PIN, motor_percentage[0]);
     motor_setSpeed(MOTOR2_PIN, motor_percentage[1]);
@@ -124,14 +141,14 @@ void Device::updateInvertElev()
     int rem = pose.distance % 10;
 
     // Round either up or down to nearest 10 m
-    d = rem >= 5 ? (pose.distance + 10 - rem ) : (pose.distance - rem)
-       
+    d = rem >= 5 ? (pose.distance + 10 - rem ) : (pose.distance - rem);
     
-    invertElev = tunnel_elevation{[d][1]};
+
+    invertElev = tunnel_elevation[d-1110][1];
 }
 
 
-void Device::test_services()
+bool Device::test_services()
 {
     // test stuff to see if it has initialised and is running correctly
     return true;
@@ -146,11 +163,11 @@ bool Device::init()
     motor_init(MOTOR3_PIN);
     motor_init(MOTOR4_PIN);
 
-    lux_init();
-    imu_init();
+    // lux_init();
+    // imu_init();
     
-    delay(3000);
-    return true
+    // delay(3000);
+    return true;
 }
 
 
@@ -165,35 +182,37 @@ Device::Device()
 }
 
 
-Device::begin()
+void Device::begin()
 {
     cout << "Device is being initalized" << endl;
     operation_state = Boot;
     deployTime = 0;
     pose.distance = 1100;    //meters
+    invertElev = 0;
 }
 
 
-Device::begin(device_state init_state, int prev_time)
+void Device::begin(device_state init_state, int prev_time)
 {
     cout << "Device is being re-initalized" << endl;
     operation_state = init_state;
     upTime = prev_time;
     deployTime = DEPLOY_TIME/2;             // this wiill need fixing!
     pose.distance = 1100;
+    invertElev = 0;
 }
 
 
 void Device::readSensors()
 {
-    pressure = getPressure_mH2O(adcPin sensorPin);
+    pressure = getPressure_mH2O(PRESSURE_SENSOR_PIN);
 
-    IRtop = get_IRdistance_cm(adcPin sensorPin);
-    IRleft = get_IRdistance_cm(adcPin sensorPin);
-    IRbottom = get_IRdistance_cm(adcPin sensorPin);
-    IRright = get_IRdistance_cm(adcPin sensorPin);
+    IRtop = get_IRdistance_cm(IRup_PIN);
+    IRleft = get_IRdistance_cm(IRleft_PIN);
+    IRbottom = get_IRdistance_cm(IRdown_PIN);
+    IRright = get_IRdistance_cm(IRright_PIN);
 
-    orientation = bno_sensor.getVector(Adafruit_BNO055::VECTOR_EULER);
+    // pose.orientation = imu_getOrientation();
 }
 
 
@@ -205,11 +224,10 @@ void Device::state_controller()
             bool success;
             success = init();
             success &= test_services();
-
             if (success){
                 operation_state = Deployment;
             }
-            else (!success)
+            else
             {
                 // flash_lights(ERROR);
             }
@@ -233,7 +251,7 @@ void Device::state_controller()
             adjustPose();
 
             // Device has reached end of tunnel
-            if ( (lux > DARK_LUX)  or (upTime => RETRIEVE_TIME) ){
+            if ( (lux > DARK_LUX)  || (upTime > RETRIEVE_TIME) ){
                 operation_state = Retrieval;
             }
             break;
@@ -243,26 +261,36 @@ void Device::state_controller()
 
             // flash_lights(RETRIEVAL)
             break;
+        default:
+            break;
     }
 
 }
 
 
-void updateTravelTime(int time)
+void Device::updateTravelTime(int time)
 {
     upTime = time;
-
-    if( state > Deployment)
+    if( operation_state == Traverse)
     {
         // Estimated distance through tunnel
-        pose.distance += ESTIMATED_VEL * ( upTime - deployTime) ;   // Check units!!!!
+        pose.distance = ESTIMATED_VEL * ( upTime - deployTime) + 1100;   // Check units!!!!
+
+
         updateInvertElev();
     }
-
 }
 
     
+int Device::getInvertElev()
+{
+    return invertElev;
+}
 
+int Device::get_distance()
+{
+    return pose.distance;
+}
 /**************************************************************************************************
 *   brains.cpp
 **************************************************************************************************/
