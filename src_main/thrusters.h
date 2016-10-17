@@ -1,13 +1,13 @@
 /*!
-*   motors.h
+*   thusters.h
 *
 *   Purpose:            Provide an interface to control the T100 thrusters with the use of PWMs
 *
 *   Created:            xx/yy/2016  ...    
 */
 
-#ifndef MOTORS_H
-#define MOTORS_H
+#ifndef THRUSTERS_H
+#define THRUSTERS_H
 
 #include "Wiring.h"
 
@@ -26,8 +26,8 @@
 void motor_init(Pin motorpin);
 void motor_setSpeed(Pin motorpin, int percentage);
 
-#endif /* MOTORS_H */
+#endif /* THRUSTERS_H */
 
 /**************************************************************************************************
-*   End of header file motors.h
+*   End of header file thusters.h
 **************************************************************************************************/

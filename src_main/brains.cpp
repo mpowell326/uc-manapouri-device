@@ -18,7 +18,7 @@
 #include "Wiring.h"
 #include "sensors.h"
 #include "tunnel_elevation.h"
-#include "motors.h"
+#include "thrusters.h"
 
 /*-----------------------------------------------------------------------------------------------*/
 /* Defines                                                                                       */

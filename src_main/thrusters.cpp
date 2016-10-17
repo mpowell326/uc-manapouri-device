@@ -1,5 +1,5 @@
 /*!
-*   \motors.cpp
+*   \thusters.cpp
 *
 *   Purpose:            Provide an interface to control the T100 thrusters with the use of PWMs
 *
@@ -10,7 +10,7 @@
 /*-----------------------------------------------------------------------------------------------*/
 /* Includes                                                                                      */
 /*-----------------------------------------------------------------------------------------------*/
-#include "motors.h"
+#include "thusters.h"
 #include "bbb_config.h"
 #include "Wiring.h"
 
@@ -89,5 +89,5 @@ void motor_setSpeed(Pin motorpin, int percentage)
 }
 
 /**************************************************************************************************
-*   motors.cpp
+*   thusters.cpp
 **************************************************************************************************/
