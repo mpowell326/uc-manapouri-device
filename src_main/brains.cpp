@@ -48,6 +48,10 @@
 /* Constants                                                                                     */
 /*-----------------------------------------------------------------------------------------------*/
 
+/*          x,      y,      yaw,    pitch */
+int* KP = [ 1,      1,      1,      1     ];
+int* KI = [ 1,      1,      1,      1     ];
+int* KD = [ 1,      1,      1,      1     ];
 
 /*-----------------------------------------------------------------------------------------------*/
 /* Variables                                                                                     */
@@ -87,9 +91,18 @@ void Device::surfaceDevice()
 
 std::vector <int> Device::get_orientationControl()
 {
-    // pid control to keep deice straight using imu data
     std::vector<int> percentages(4);
-    percentages.assign ( 4, 1);
+    percentages.assign ( 4, 0);
+
+    /* YAW:  pid control to keep deice straight using imu data */
+    yawController.calculate( COMPASS_BEARING, yaw, upTime - prevTime);
+
+
+    /* PITCH:  pid control to keep deice level using imu data */
+    pitchController.calculate( 0, pitch, upTime - prevTime)
+
+
+
     return percentages;
 
 }
@@ -97,13 +110,22 @@ std::vector <int> Device::get_orientationControl()
 
 std::vector <int> Device::get_positionControl()
 {
-    // pid control using pressure data
-
-    // possibly use acceleration and time to get an idea of distance moved
-
-    // readjust using IR data
     std::vector<int> percentages(4);
-    percentages.assign ( 4,1 );
+    percentages.assign ( 4, 0 );
+
+    /* VERTICAL: pid control using pressure data    */
+    yController.calculate( invertElev+5 , pressure, upTime - prevTime );
+    
+    /* HORIZONTAL: use IR as virtual bumper */
+    // xController.calculate( 0, position.x, upTime - prevTime );
+    for (int i=0; i<4; i++)
+    {
+        if ()
+    }
+    // possibly use acceleration and dt to get an idea of distance moved from centre
+
+    // re-adjust estimated invertElev using IR data
+
     return percentages;
 
 }
@@ -111,14 +133,14 @@ std::vector <int> Device::get_positionControl()
 
 void Device::adjustPose()
 {
-    std::vector<int> motor_percentages1, motor_percentages2;
+    std::vector<int> motor_percentagesOri, motor_percentagesPos;
 
-    motor_percentages1 = get_orientationControl();
-    motor_percentages2 = get_positionControl();
+    motor_percentagesOri = get_orientationControl();
+    motor_percentagesPos = get_positionControl();
 
     for( int i=0; i<4; i++)
     {
-        motor_percentage[i] = motor_percentages1[i] + motor_percentages2[i];
+        motor_percentage[i] = motor_percentagesOri[i] * motor_percentagesPos[i];
     }
     
     // std::transform(motor_percentages1.begin( ), motor_percentages1.end( ), motor_percentages2.begin( ), motor_percentages1.begin( ),std::plus<int>( ));
@@ -165,8 +187,15 @@ bool Device::init()
 
     // lux_init();
     // imu_init();
-    
+
     // delay(3000);
+
+    // Set up PID controllers
+    xController.init(100, -100, KP(0), KI(0), KD(0) );
+    yController.init(100, -100, KP(1), KI(1), KD(1) );
+    yawController.init(100, -100, KP(2), KI(2), KD(2) );
+    pitchController.init(100, -100, KP(3), KI(3), KD(3) );
+
     return true;
 }
 
@@ -192,11 +221,11 @@ void Device::begin()
 }
 
 
-void Device::begin(device_state init_state, int prev_time)
+void Device::begin(device_state init_state, int prev_uptime)
 {
     cout << "Device is being re-initalized" << endl;
     operation_state = init_state;
-    upTime = prev_time;
+    upTime = prev_uptime;
     deployTime = DEPLOY_TIME/2;             // this wiill need fixing!
     pose.distance = 1100;
     invertElev = 0;
@@ -270,7 +299,9 @@ void Device::state_controller()
 
 void Device::updateTravelTime(int time)
 {
+    prevTime = upTime;
     upTime = time;
+
     if( operation_state == Traverse)
     {
         // Estimated distance through tunnel

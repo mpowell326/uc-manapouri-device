@@ -13,8 +13,10 @@
 #ifndef BRAINS_H
 #define BRAINS_H
 
-using namespace std;
+
 #include <vector>
+
+using namespace std;
 
 /*-----------------------------------------------------------------------------------------------*/
 /*  Defines                                                                                      */
@@ -64,6 +66,11 @@ class Device {
     // Current Motor speed/percentage
     int * motor_percentage;
 
+    // PID controllers
+    PID xController;
+    PID yController;
+    PID yawController;
+    PID pitchController;
 
     void surfaceDevice();
     std::vector<int> get_orientationControl();
@@ -76,7 +83,7 @@ class Device {
 public:
     Device(void);
     void begin();
-    void begin(device_state init_state, int prev_time);
+    void begin(device_state init_state, int prev_uptime);
     void readSensors();
     void state_controller();
     void updateTravelTime(int time);
