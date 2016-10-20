@@ -17,7 +17,7 @@
 class PID
 {
     public:
-        init( double max, double min, double Kp, double Kd, double Ki );
+        void init( double max, double min, double Kp, double Kd, double Ki );
 
         // Returns the manipulated variable given a setpoint and current process value
         double calculate( double setpoint, double pv, double dt );

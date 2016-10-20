@@ -19,6 +19,7 @@
 #include "sensors.h"
 #include "tunnel_elevation.h"
 #include "thrusters.h"
+#include "pid.h"
 
 /*-----------------------------------------------------------------------------------------------*/
 /* Defines                                                                                       */
@@ -32,6 +33,8 @@
 #define DARK_LUX        100     // lux to consider having reached tunnel exit
 
 #define ESTIMATED_VEL   3.5     // m/s
+
+#define DISTANCE_2_WALL 125     
 /*-----------------------------------------------------------------------------------------------*/
 /* Macros                                                                                        */
 /*-----------------------------------------------------------------------------------------------*/
@@ -49,9 +52,9 @@
 /*-----------------------------------------------------------------------------------------------*/
 
 /*          x,      y,      yaw,    pitch */
-int* KP = [ 1,      1,      1,      1     ];
-int* KI = [ 1,      1,      1,      1     ];
-int* KD = [ 1,      1,      1,      1     ];
+int KP[4] = { 1,      1,      1,      1     };
+int KI[4] = { 1,      1,      1,      1     };
+int KD[4] = { 1,      1,      1,      1     };
 
 /*-----------------------------------------------------------------------------------------------*/
 /* Variables                                                                                     */
@@ -93,13 +96,17 @@ std::vector <int> Device::get_orientationControl()
 {
     std::vector<int> percentages(4);
     percentages.assign ( 4, 0);
+    double temp_var;
 
     /* YAW:  pid control to keep deice straight using imu data */
-    yawController.calculate( COMPASS_BEARING, yaw, upTime - prevTime);
+    temp_var = yawController.calculate( COMPASS_BEARING * M_PI / 180.0, pose.orientation[0], upTime - prevTime);   //maybe have setpoint as 0 and pv as + bearing to give more resolution
+    percentages[0] = temp_var;
+    percentages[1] = -temp_var;
 
-
-    /* PITCH:  pid control to keep deice level using imu data */
-    pitchController.calculate( 0, pitch, upTime - prevTime)
+    /* PITCH:  pid control to keep device level using imu data */
+    temp_var = pitchController.calculate( 0, pose.orientation[1], upTime - prevTime);
+    percentages[2] = temp_var;
+    percentages[3] = -temp_var;
 
 
 
@@ -112,16 +119,51 @@ std::vector <int> Device::get_positionControl()
 {
     std::vector<int> percentages(4);
     percentages.assign ( 4, 0 );
+    int pushOffset_y, pushOffset_x;
+    int temp_var;
 
     /* VERTICAL: pid control using pressure data    */
-    yController.calculate( invertElev+5 , pressure, upTime - prevTime );
-    
+    temp_var = yController.calculate( invertElev+5 , pose.position[1], upTime - prevTime );
+    percentages[2] = temp_var;
+    percentages[3] = temp_var;
+
+    if (IRtop < DISTANCE_2_WALL)
+    {
+        yTimer = 5;
+        pushOffset_y = -80; //down
+    }
+    if (IRbottom < DISTANCE_2_WALL)
+    {
+        yTimer = 5;
+        pushOffset_y = 40; //up
+    }
+    yTimer -= (upTime - prevTime);
+    if ( yTimer > 0.5 )
+    {
+        percentages[2] += pushOffset_y;
+        percentages[3] += pushOffset_y;
+    }
+
     /* HORIZONTAL: use IR as virtual bumper */
     // xController.calculate( 0, position.x, upTime - prevTime );
-    for (int i=0; i<4; i++)
+    if (IRleft < DISTANCE_2_WALL)
     {
-        if ()
+        xTimer = 5;
+        pushOffset_x = 70; //right
     }
+    if (IRright < DISTANCE_2_WALL)
+    {
+        pushOffset_x = -70; //left
+    }
+
+    xTimer -= (upTime - prevTime);
+    if ( xTimer > 0.5 )
+    {
+        percentages[0] = pushOffset_x;
+        percentages[1] = pushOffset_x;
+    }
+
+
     // possibly use acceleration and dt to get an idea of distance moved from centre
 
     // re-adjust estimated invertElev using IR data
@@ -140,9 +182,9 @@ void Device::adjustPose()
 
     for( int i=0; i<4; i++)
     {
-        motor_percentage[i] = motor_percentagesOri[i] * motor_percentagesPos[i];
+        motor_percentage[i] = motor_percentagesOri[i] + motor_percentagesPos[i];
+        printf("%d\n", motor_percentage[i]);
     }
-    
     // std::transform(motor_percentages1.begin( ), motor_percentages1.end( ), motor_percentages2.begin( ), motor_percentages1.begin( ),std::plus<int>( ));
     // motor_percentage_ = &get_orientationControl()[0];   //IMU
     // motor_percentage = motor_percentage + &get_positionControl()[0];     //IR and pressure
@@ -164,9 +206,9 @@ void Device::updateInvertElev()
 
     // Round either up or down to nearest 10 m
     d = rem >= 5 ? (pose.distance + 10 - rem ) : (pose.distance - rem);
-    
+    // printf("i = %d, r = %d, distance=%d \n",(d-1110)/10, rem, pose.distance);
 
-    invertElev = tunnel_elevation[d-1110][1];
+    invertElev = tunnel_elevation[(d-1110)/10][1];
 }
 
 
@@ -188,13 +230,13 @@ bool Device::init()
     // lux_init();
     // imu_init();
 
-    // delay(3000);
+    delay(3000);
 
     // Set up PID controllers
-    xController.init(100, -100, KP(0), KI(0), KD(0) );
-    yController.init(100, -100, KP(1), KI(1), KD(1) );
-    yawController.init(100, -100, KP(2), KI(2), KD(2) );
-    pitchController.init(100, -100, KP(3), KI(3), KD(3) );
+    xController.init(100, -100, KP[0], KI[0], KD[0] );
+    yController.init(100, -100, KP[1], KI[1], KD[1] );
+    yawController.init(100, -100, KP[2], KI[2], KD[2] );
+    pitchController.init(100, -100, KP[3], KI[3], KD[3] );
 
     return true;
 }
@@ -297,7 +339,7 @@ void Device::state_controller()
 }
 
 
-void Device::updateTravelTime(int time)
+void Device::updateTravelTime(double time)
 {
     prevTime = upTime;
     upTime = time;
@@ -305,7 +347,7 @@ void Device::updateTravelTime(int time)
     if( operation_state == Traverse)
     {
         // Estimated distance through tunnel
-        pose.distance = ESTIMATED_VEL * ( upTime - deployTime) + 1100;   // Check units!!!!
+        pose.distance = ESTIMATED_VEL * (int)( upTime - deployTime) + 1100;   // Check units!!!!
 
 
         updateInvertElev();

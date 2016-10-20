@@ -15,6 +15,7 @@
 
 
 #include <vector>
+#include "pid.h"
 
 using namespace std;
 
@@ -37,7 +38,7 @@ typedef enum {
 class Pose {
 public:
     // Device pose
-    double * orientation;
+    double orientation[3];
     double position[3];
     int distance;
 };
@@ -48,9 +49,9 @@ class Device {
     device_state operation_state;
 
     // Time since boot/Deployment
-    int upTime;
-    int prevTime;
-    int deployTime;
+    double upTime;
+    double prevTime;
+    double deployTime;
 
     // Estimated current invert elevation of tunnel
     int invertElev;
@@ -64,13 +65,16 @@ class Device {
     double lux;
 
     // Current Motor speed/percentage
-    int * motor_percentage;
+    int motor_percentage[4];
 
     // PID controllers
     PID xController;
     PID yController;
     PID yawController;
     PID pitchController;
+    double yTimer;
+    double xTimer;
+
 
     void surfaceDevice();
     std::vector<int> get_orientationControl();
@@ -86,7 +90,7 @@ public:
     void begin(device_state init_state, int prev_uptime);
     void readSensors();
     void state_controller();
-    void updateTravelTime(int time);
+    void updateTravelTime(double time);
     int getInvertElev();
     int get_distance();
 };

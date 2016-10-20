@@ -20,16 +20,16 @@ using namespace std;
 /*-----------------------------------------------------------------------------------------------*/
 /* Public Functions                                                                              */
 /*-----------------------------------------------------------------------------------------------*/
-PID::init( double max, double min, double Kp, double Kd, double Ki ) :
-    _dt(dt),
-    _max(max),
-    _min(min),
-    _Kp(Kp),
-    _Kd(Kd),
-    _Ki(Ki),
-    _pre_error(0),
-    _integral(0)
+void PID::init( double max, double min, double Kp, double Kd, double Ki )
 {
+    _max = max;
+    _min = min;
+    _Kp = Kp;
+    _Kd = Kd;
+    _Ki = Ki;
+    _pre_error = 0;
+    _integral = 0;
+
 }
 
 double PID::calculate( double setpoint, double pv, double dt )
@@ -42,11 +42,11 @@ double PID::calculate( double setpoint, double pv, double dt )
     double Pout = _Kp * error;
 
     // Integral term
-    _integral += error * _dt;
+    _integral += error * dt;
     double Iout = _Ki * _integral;
 
     // Derivative term
-    double derivative = (error - _pre_error) / _dt;
+    double derivative = (error - _pre_error) / dt;
     double Dout = _Kd * derivative;
 
     // Calculate total output
