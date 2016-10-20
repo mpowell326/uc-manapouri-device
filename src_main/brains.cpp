@@ -123,20 +123,25 @@ std::vector <int> Device::get_positionControl()
     int temp_var;
 
     /* VERTICAL: pid control using pressure data    */
-    temp_var = yController.calculate( invertElev+5 , pose.position[1], upTime - prevTime );
+    temp_var = yController.calculate( invertElev+5 , pose.y(), upTime - prevTime );
     percentages[2] = temp_var;
     percentages[3] = temp_var;
 
+
+    /* VERTICAL: virtual bumper using IR    */
     if (IRtop < DISTANCE_2_WALL)
     {
+        // re-adjust/calibrate estimated invertElev using IR data
         yTimer = 5;
         pushOffset_y = -80; //down
     }
     if (IRbottom < DISTANCE_2_WALL)
     {
+        // re-adjust/calibrate estimated invertElev using IR data
         yTimer = 5;
         pushOffset_y = 40; //up
     }
+
     yTimer -= (upTime - prevTime);
     if ( yTimer > 0.5 )
     {
@@ -144,8 +149,9 @@ std::vector <int> Device::get_positionControl()
         percentages[3] += pushOffset_y;
     }
 
+
     /* HORIZONTAL: use IR as virtual bumper */
-    // xController.calculate( 0, position.x, upTime - prevTime );
+    // xController.calculate( 0, pose.x(), upTime - prevTime );
     if (IRleft < DISTANCE_2_WALL)
     {
         xTimer = 5;
@@ -164,9 +170,12 @@ std::vector <int> Device::get_positionControl()
     }
 
 
-    // possibly use acceleration and dt to get an idea of distance moved from centre
 
-    // re-adjust estimated invertElev using IR data
+    // possibly use acceleration and dt to get an idea of distance moved from centre
+    // i.e  pose.x() += get_acc_x()*dt;
+    //      pose.y() += get_acc_y()*dt;
+
+
 
     return percentages;
 
@@ -208,7 +217,7 @@ void Device::updateInvertElev()
     d = rem >= 5 ? (pose.distance + 10 - rem ) : (pose.distance - rem);
     // printf("i = %d, r = %d, distance=%d \n",(d-1110)/10, rem, pose.distance);
 
-    invertElev = tunnel_elevation[(d-1110)/10][1];
+    invertElev = tunnel_elevation[(d-1110)/10][1];                                      // Possiby could interpolate to get a more accurate reading
 }
 
 
@@ -268,7 +277,7 @@ void Device::begin(device_state init_state, int prev_uptime)
     cout << "Device is being re-initalized" << endl;
     operation_state = init_state;
     upTime = prev_uptime;
-    deployTime = DEPLOY_TIME/2;             // this wiill need fixing!
+    deployTime = DEPLOY_TIME/2;                                 // @@@ this will need fixing!
     pose.distance = 1100;
     invertElev = 0;
 }
@@ -283,7 +292,7 @@ void Device::readSensors()
     IRbottom = get_IRdistance_cm(IRdown_PIN);
     IRright = get_IRdistance_cm(IRright_PIN);
 
-    // pose.orientation = imu_getOrientation();
+    pose.orientation = imu_getOrientation();
 }
 
 
