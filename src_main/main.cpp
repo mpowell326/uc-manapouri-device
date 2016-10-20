@@ -72,7 +72,7 @@ int main(void)
         printf("Time: %f, Distance: %d, Elev: %d",  time, nemo.get_distance(), nemo.getInvertElev());
         cout << "" << endl;
         
-        delay(1000);         // Probably should add a basic task scheduler
+        delay(100);         // Probably should add a basic task scheduler
     }
     return 0;
 }
