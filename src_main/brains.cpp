@@ -99,13 +99,6 @@ std::vector <int> Device::get_orientationControl()
     double temp_var;
 
     /* YAW:  pid control to keep deice straight using imu data */
-<<<<<<< HEAD
-    yawController.calculate( COMPASS_BEARING, pose.yaw(), upTime - prevTime);
-
-
-    /* PITCH:  pid control to keep deice level using imu data */
-    pitchController.calculate( 0, pose.pitch(), upTime - prevTime)
-=======
     temp_var = yawController.calculate( COMPASS_BEARING * M_PI / 180.0, pose.orientation[0], upTime - prevTime);   //maybe have setpoint as 0 and pv as + bearing to give more resolution
     percentages[0] = temp_var;
     percentages[1] = -temp_var;
@@ -114,7 +107,6 @@ std::vector <int> Device::get_orientationControl()
     temp_var = pitchController.calculate( 0, pose.orientation[1], upTime - prevTime);
     percentages[2] = temp_var;
     percentages[3] = -temp_var;
->>>>>>> 7d9e9df5e66a3b4ab846157080bb2df98ffd546f
 
 
 
