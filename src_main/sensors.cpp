@@ -235,7 +235,9 @@ void imu_print(void)
 
 double* imu_getOrientation()
 {
-    return &bno_sensor.getVector(Adafruit_BNO055::VECTOR_EULER)[0];
+    imu::Vector<3> euler = bno_sensor.getVector(Adafruit_BNO055::VECTOR_EULER);
+    
+    return &euler[0];
 }
 
 

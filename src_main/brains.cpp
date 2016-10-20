@@ -95,11 +95,11 @@ std::vector <int> Device::get_orientationControl()
     percentages.assign ( 4, 0);
 
     /* YAW:  pid control to keep deice straight using imu data */
-    yawController.calculate( COMPASS_BEARING, yaw, upTime - prevTime);
+    yawController.calculate( COMPASS_BEARING, pose.yaw(), upTime - prevTime);
 
 
     /* PITCH:  pid control to keep deice level using imu data */
-    pitchController.calculate( 0, pitch, upTime - prevTime)
+    pitchController.calculate( 0, pose.pitch(), upTime - prevTime)
 
 
 
@@ -120,7 +120,7 @@ std::vector <int> Device::get_positionControl()
     // xController.calculate( 0, position.x, upTime - prevTime );
     for (int i=0; i<4; i++)
     {
-        if ()
+        // if ()
     }
     // possibly use acceleration and dt to get an idea of distance moved from centre
 

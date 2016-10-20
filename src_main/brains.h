@@ -40,6 +40,10 @@ public:
     double * orientation;
     double position[3];
     int distance;
+
+    double yaw() const { return orientation[0]; }
+    double pitch() const { return orientation[1]; }
+    double roll() const { return orientation[2]; }
 };
 
 
