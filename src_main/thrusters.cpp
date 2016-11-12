@@ -74,6 +74,14 @@ void motor_init(Pin motorpin)
     setPulseWidth (motorpin, PWM_STOP_SIGNAL);
 }
 
+void motor_stopALL()
+{
+        motor_setSpeed( MOTOR_F_H, 0 );
+        motor_setSpeed( MOTOR_F_V, 0 );
+        motor_setSpeed( MOTOR_R_V, 0 );
+        motor_setSpeed( MOTOR_R_H, 0 );
+}
+
 void motor_setSpeed(Pin motorpin, int percentage)
 {
     int pwm_width;

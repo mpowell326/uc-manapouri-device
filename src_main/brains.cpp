@@ -27,10 +27,10 @@
 
 #define COMPASS_BEARING 304     // Roughly, needs to be checked and adujsted for magnetic
 
-#define DEPLOY_TIME     5*60    // seconds
+#define DEPLOY_TIME     30*60   // seconds
 #define RETRIEVE_TIME   90*60   // seconds
 
-#define DARK_LUX        100     // lux to consider having reached tunnel exit
+#define DARK_LUX        3000     // lux to consider having reached tunnel exit
 
 #define ESTIMATED_VEL   3.5     // m/s
 
@@ -53,8 +53,8 @@
 
 /*          x,      y,      yaw,    pitch */
 int KP[4] = { 1,      1,      1,      1     };
-int KI[4] = { 1,      1,      1,      1     };
-int KD[4] = { 1,      1,      1,      1     };
+int KI[4] = { 0,      0,      0,      0     };
+int KD[4] = { 0,      0,      0,      0     };
 
 /*-----------------------------------------------------------------------------------------------*/
 /* Variables                                                                                     */
@@ -79,15 +79,13 @@ void Device::surfaceDevice()
     if(pressure >= 1)
     {
         // setTarget();
-        adjustPose();
+        // adjustPose();
+        motor_stopALL();
     }
     else
     {
         // Disable Thrusters
-        motor_setSpeed( MOTOR1_PIN, 0 );
-        motor_setSpeed( MOTOR2_PIN, 0 );
-        motor_setSpeed( MOTOR3_PIN, 0 );
-        motor_setSpeed( MOTOR4_PIN, 0 );
+        motor_stopALL();
     }
 }
 
@@ -98,15 +96,15 @@ std::vector <int> Device::get_orientationControl()
     percentages.assign ( 4, 0);
     double temp_var;
 
-    /* YAW:  pid control to keep deice straight using imu data */
-    temp_var = yawController.calculate( COMPASS_BEARING * M_PI / 180.0, pose.orientation[0], upTime - prevTime);   //maybe have setpoint as 0 and pv as + bearing to give more resolution
-    percentages[0] = temp_var;
-    percentages[1] = -temp_var;
+    /* YAW:  pid control to keep device straight using imu data */
+    temp_var = yawController.calculate( bearing_target, pose.yaw(), upTime - prevTime);   //maybe have setpoint as 0 and pv as + bearing to give more resolution
+    percentages[0] = -temp_var;
+    percentages[3] = temp_var;
 
     /* PITCH:  pid control to keep device level using imu data */
-    temp_var = pitchController.calculate( 0, pose.orientation[1], upTime - prevTime);
+    temp_var = pitchController.calculate( 0, pose.pitch(), upTime - prevTime);
+    percentages[1] = -temp_var;
     percentages[2] = temp_var;
-    percentages[3] = -temp_var;
 
 
 
@@ -122,10 +120,10 @@ std::vector <int> Device::get_positionControl()
     int pushOffset_y, pushOffset_x;
     int temp_var;
 
-    /* VERTICAL: pid control using pressure data    */
-    temp_var = yController.calculate( invertElev+5 , pose.y(), upTime - prevTime );
-    percentages[2] = temp_var;
-    percentages[3] = temp_var;
+    /* VERTICAL: pid control using pressure data    */                                                          // perhaps add kalman filter for this
+    // temp_var = yController.calculate( invertElev+5 , pressure, upTime - prevTime );
+    // percentages[2] = temp_var;
+    // percentages[3] = temp_var;
 
 
     /* VERTICAL: virtual bumper using IR    */
@@ -142,11 +140,12 @@ std::vector <int> Device::get_positionControl()
         pushOffset_y = 40; //up
     }
 
+    /* Decrement verticl timer and add push if needed still */
     yTimer -= (upTime - prevTime);
     if ( yTimer > 0.5 )
     {
+        percentages[1] += pushOffset_y;
         percentages[2] += pushOffset_y;
-        percentages[3] += pushOffset_y;
     }
 
 
@@ -162,19 +161,22 @@ std::vector <int> Device::get_positionControl()
         pushOffset_x = -70; //left
     }
 
+    /* Decrement horozontal timer and add push if needed still */
     xTimer -= (upTime - prevTime);
     if ( xTimer > 0.5 )
     {
         percentages[0] = pushOffset_x;
-        percentages[1] = pushOffset_x;
+        percentages[3] = pushOffset_x;
     }
 
 
 
-    // possibly use acceleration and dt to get an idea of distance moved from centre
-    // i.e  pose.x() += get_acc_x()*dt;
-    //      pose.y() += get_acc_y()*dt;
-
+    /* 
+    possibly use acceleration and dt to get an idea of distance moved from centre
+    i.e  pose.x() += get_acc_x()*dt;
+         pose.y() += get_acc_y()*dt;
+    would then need to fuse pose.y and pressure data together.
+    */
 
 
     return percentages;
@@ -191,7 +193,7 @@ void Device::adjustPose()
 
     for( int i=0; i<4; i++)
     {
-        motor_percentage[i] = motor_percentagesOri[i] + motor_percentagesPos[i];
+        motor_percentage[i] = motor_percentagesOri[i] ;//+ motor_percentagesPos[i];
         printf("%d\n", motor_percentage[i]);
     }
     // std::transform(motor_percentages1.begin( ), motor_percentages1.end( ), motor_percentages2.begin( ), motor_percentages1.begin( ),std::plus<int>( ));
@@ -199,10 +201,10 @@ void Device::adjustPose()
     // motor_percentage = motor_percentage + &get_positionControl()[0];     //IR and pressure
     
     /* Adjust the motors to the new speed */
-    motor_setSpeed(MOTOR1_PIN, motor_percentage[0]);
-    motor_setSpeed(MOTOR2_PIN, motor_percentage[1]);
-    motor_setSpeed(MOTOR3_PIN, motor_percentage[2]);
-    motor_setSpeed(MOTOR4_PIN, motor_percentage[3]);
+    // motor_setSpeed(MOTOR_F_H, motor_percentage[0]);
+    // motor_setSpeed(MOTOR_F_V, motor_percentage[1]);
+    // motor_setSpeed(MOTOR_R_V, motor_percentage[2]);
+    // motor_setSpeed(MOTOR_R_H, motor_percentage[3]);
 }
 
 
@@ -224,6 +226,27 @@ void Device::updateInvertElev()
 bool Device::test_services()
 {
     // test stuff to see if it has initialised and is running correctly
+    
+    printf("Testing MOTOR_F_H\n");
+    motor_setSpeed( MOTOR_F_H, 10);
+    delay(1000);
+    motor_setSpeed( MOTOR_F_H, 0 );
+
+    printf("Testing MOTOR_F_V\n");
+    motor_setSpeed( MOTOR_F_V, 10);
+    delay(1000);
+    motor_setSpeed( MOTOR_F_V, 0 );
+
+    printf("Testing MOTOR_R_V\n");
+    motor_setSpeed( MOTOR_R_V, 10);
+    delay(1000);
+    motor_setSpeed( MOTOR_R_V, 0 );
+
+    printf("Testing MOTOR_R_H\n");
+    motor_setSpeed( MOTOR_R_H, 10);
+    delay(1000);
+    motor_setSpeed( MOTOR_R_H, 0 );
+
     return true;
 }
 
@@ -231,21 +254,29 @@ bool Device::test_services()
 bool Device::init()
 {
     printf("Nemo is waking up...\n");
-    motor_init(MOTOR1_PIN);
-    motor_init(MOTOR2_PIN);
-    motor_init(MOTOR3_PIN);
-    motor_init(MOTOR4_PIN);
+    motor_init(MOTOR_F_H);
+    motor_init(MOTOR_F_V);
+    motor_init(MOTOR_R_V);
+    motor_init(MOTOR_R_H);
 
-    // lux_init();
-    // imu_init();
+    delay(3000);
+
+    lux_init();
+    imu_init();
 
     delay(3000);
 
     // Set up PID controllers
-    xController.init(100, -100, KP[0], KI[0], KD[0] );
-    yController.init(100, -100, KP[1], KI[1], KD[1] );
-    yawController.init(100, -100, KP[2], KI[2], KD[2] );
-    pitchController.init(100, -100, KP[3], KI[3], KD[3] );
+    xController.init(100, -100, KP[0], KD[0], KI[0] );
+    yController.init(100, -100, KP[1], KD[1], KI[1] );
+    yawController.init(100, -100, KP[2], KD[2], KI[2] );
+    pitchController.init(100, -100, KP[3], KD[3], KI[3] );
+
+    double * temp_var = imu_getOrientation();
+    pose.orientation[0] = temp_var[0];
+    pose.orientation[1] = temp_var[1];
+    pose.orientation[2] = temp_var[2];
+    bearing_target = pose.orientation[0];
 
     return true;
 }
@@ -285,14 +316,23 @@ void Device::begin(device_state init_state, int prev_uptime)
 
 void Device::readSensors()
 {
-    pressure = getPressure_mH2O(PRESSURE_SENSOR_PIN);
-
+    // pressure = getPressure_mH2O(PRESSURE_SENSOR_PIN);
+    pressure = 2;
     IRtop = get_IRdistance_cm(IRup_PIN);
     IRleft = get_IRdistance_cm(IRleft_PIN);
     IRbottom = get_IRdistance_cm(IRdown_PIN);
     IRright = get_IRdistance_cm(IRright_PIN);
+    lux = getLux();
 
-    pose.orientation = imu_getOrientation();
+    double * temp_var = imu_getOrientation();
+    pose.orientation[0] = temp_var[0];
+    pose.orientation[1] = temp_var[1];
+    pose.orientation[2] = temp_var[2];
+
+    // imu_print();
+    printf("                        Target Yaw: %f\n", bearing_target);
+    printf("                        Yaw: %f, Pitch: %f, Lux: %f\n", pose.yaw(), pose.pitch(), lux);
+    printf("                        IRtop: %d, IRleft: %d, IRbottom: %d, IRright: %d\n", IRtop, IRleft, IRbottom, IRright);
 }
 
 
@@ -315,6 +355,7 @@ void Device::state_controller()
     
 
         case Deployment:
+            printf("                    Pressure: %d\n", pressure);
             // Check if device is in the water (below 1mH20)
             if ( pressure > 1){
                 operation_state = Traverse;
@@ -328,7 +369,7 @@ void Device::state_controller()
 
         case Traverse:
             // Reposition device in centre and keep straight
-            adjustPose();
+            // adjustPose();
 
             // Device has reached end of tunnel
             if ( (lux > DARK_LUX)  || (upTime > RETRIEVE_TIME) ){
@@ -352,7 +393,7 @@ void Device::updateTravelTime(double time)
 {
     prevTime = upTime;
     upTime = time;
-
+    printf("dt: %f\n", upTime-prevTime);
     if( operation_state == Traverse)
     {
         // Estimated distance through tunnel

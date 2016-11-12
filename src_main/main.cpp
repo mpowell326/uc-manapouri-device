@@ -48,8 +48,12 @@ int main(void)
     // }
     // else{
         nemo.begin();
+
         // logFile_init();
     // }
+    
+    // Run appropriate functions/operations for current state
+    nemo.state_controller();
     
 
     while(1)

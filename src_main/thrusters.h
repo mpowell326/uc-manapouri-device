@@ -24,6 +24,7 @@
 /*  Function Prototypes                                                                          */
 /*-----------------------------------------------------------------------------------------------*/
 void motor_init(Pin motorpin);
+void motor_stopALL();
 void motor_setSpeed(Pin motorpin, int percentage);
 
 #endif /* THRUSTERS_H */

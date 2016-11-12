@@ -30,7 +30,7 @@
 // If time = 3, use manual start / stop to perform your own integration
 #define LUX_TIME    2
 
-
+#define VOLT_DIV    4.9
 
 #define PSI_TO_PASCAL       6894.76 //psi
 #define PASCAL_TO_ATM       101325  //Pascal
@@ -170,7 +170,7 @@ double getLux()
     {
         // getData() returned true, communication was successful
 
-        printf("data0: %d, data1: %d    | ", data0, data1);
+        // printf("data0: %d, data1: %d    | ", data0, data1);
 
 
         // To calculate lux, pass all your settings and readings
@@ -189,8 +189,8 @@ double getLux()
         good = light.getLux(LUX_GAIN,ms,data0,data1,lux);
 
 
-        printf("lux: %f ", lux);
-        if (good) printf(" (good)\n"); else printf(" (BAD)\n");
+        // printf("lux: %f ", lux);
+        // if (good) printf(" (good)\n"); else printf(" (BAD)\n");
     }
     else
     {
@@ -236,6 +236,7 @@ void imu_print(void)
 double* imu_getOrientation()
 {
     imu::Vector<3> euler = bno_sensor.getVector(Adafruit_BNO055::VECTOR_EULER);
+    // printf("                        Yaw: %f, Pitch: %f\n", euler.x(), euler.y());
     
     return &euler[0];
 }
@@ -267,8 +268,9 @@ int get_IRdistance_cm(adcPin sensorPin)
 {
     int distance;
 
-    distance = map(analogRead(sensorPin),0,1023, 150, 0);
-
+    distance = map(analogRead(sensorPin)*1800/1024*VOLT_DIV, 0, 3300, 200, 0);
+    // printf("~~~~~~~~~~~~~~~~~~~%d~~~~~~~~~~~~~~~",distance);
+    // return distance;
     return distance;
 }
 /**************************************************************************************************

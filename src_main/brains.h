@@ -38,9 +38,10 @@ typedef enum {
 class Pose {
 public:
     // Device pose
-    double * orientation;
+    double orientation[3];
     double position[2];
     int distance;
+
 
     double yaw() const { return orientation[0]; }
     double pitch() const { return orientation[1]; }
@@ -55,6 +56,9 @@ public:
 class Device {
     // Opertion state
     device_state operation_state;
+
+    // Bearing of tunnel
+    double bearing_target;
 
     // Time since boot/Deployment
     double upTime;
